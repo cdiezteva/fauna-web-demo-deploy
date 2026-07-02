@@ -81,7 +81,7 @@ const es: Dict = {
     expand: "↗ Expandir mapa",
     collapse: "↙ Contraer mapa",
     mapLoading: "Cargando mapa…",
-    mapLegend: { fo: "Rojo · Fauna-FO", e: "Azul · Fauna-E", l: "Verde · Fauna-L", b: "Morado · Fauna-B" },
+    mapLegend: { fo: "Fauna-FO", e: "Fauna-E", l: "Fauna-L", b: "Fauna-B" },
     items: [
       {
         solName: "Fibra óptica enterrada", ambito: "Tramos largos y abiertos", tagline: "Detección lineal por C-OTDR",
@@ -216,7 +216,7 @@ const en: Dict = {
     expand: "↗ Expand map",
     collapse: "↙ Collapse map",
     mapLoading: "Loading map…",
-    mapLegend: { fo: "Red · Fauna-FO", e: "Blue · Fauna-E", l: "Green · Fauna-L", b: "Purple · Fauna-B" },
+    mapLegend: { fo: "Fauna-FO", e: "Fauna-E", l: "Fauna-L", b: "Fauna-B" },
     items: [
       {
         solName: "Buried optical fibre", ambito: "Long, open stretches", tagline: "Linear detection via C-OTDR",
@@ -351,7 +351,7 @@ const pt: Dict = {
     expand: "↗ Expandir mapa",
     collapse: "↙ Recolher mapa",
     mapLoading: "A carregar o mapa…",
-    mapLegend: { fo: "Vermelho · Fauna-FO", e: "Azul · Fauna-E", l: "Verde · Fauna-L", b: "Roxo · Fauna-B" },
+    mapLegend: { fo: "Fauna-FO", e: "Fauna-E", l: "Fauna-L", b: "Fauna-B" },
     items: [
       {
         solName: "Fibra ótica enterrada", ambito: "Troços longos e abertos", tagline: "Deteção linear por C-OTDR",
@@ -486,7 +486,7 @@ const ca: Dict = {
     expand: "↗ Ampliar mapa",
     collapse: "↙ Reduir mapa",
     mapLoading: "S'està carregant el mapa…",
-    mapLegend: { fo: "Vermell · Fauna-FO", e: "Blau · Fauna-E", l: "Verd · Fauna-L", b: "Morat · Fauna-B" },
+    mapLegend: { fo: "Fauna-FO", e: "Fauna-E", l: "Fauna-L", b: "Fauna-B" },
     items: [
       {
         solName: "Fibra òptica enterrada", ambito: "Trams llargs i oberts", tagline: "Detecció lineal per C-OTDR",
