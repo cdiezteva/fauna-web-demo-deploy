@@ -18,7 +18,8 @@ export interface Dict {
   problema: { label: string; title: string; subtitle: string; speciesTitle: string; source: string; statLabels: string[]; species: string[] };
   gama: {
     label: string; title: string; subtitle: string; ambitoWord: string; comingSoon: string;
-    mapTitle: string; mapDesc: string; expand: string; collapse: string; mapLoading: string;
+    mapTitle: string; mapDesc: string; mapDescMobile: string; expand: string; collapse: string; mapLoading: string;
+    mapLegend: { fo: string; e: string; l: string; b: string };
     items: { solName: string; ambito: string; tagline: string; desc: string; specs: string[]; refs: string[] }[];
   };
   plataforma: { label: string; title: string; subtitle: string; deployLabel: string; items: { k: string; v: string }[] };
@@ -76,9 +77,11 @@ const es: Dict = {
     comingSoon: "Próximamente",
     mapTitle: "Ejemplo de aplicación · Sierra de Collserola",
     mapDesc: "Mapa 3D interactivo del terreno con la traza real de detección Fauna-FO superpuesta. Explore el relieve, cambie de estilo y active las capas de datos.",
+    mapDescMobile: "Traza real de detección en la Sierra de Collserola, con un tramo por cada tecnología de la gama AVIZOR Fauna.",
     expand: "↗ Expandir mapa",
     collapse: "↙ Contraer mapa",
     mapLoading: "Cargando mapa…",
+    mapLegend: { fo: "Rojo · Fauna-FO", e: "Azul · Fauna-E", l: "Verde · Fauna-L", b: "Morado · Fauna-B" },
     items: [
       {
         solName: "Fibra óptica enterrada", ambito: "Tramos largos y abiertos", tagline: "Detección lineal por C-OTDR",
@@ -209,9 +212,11 @@ const en: Dict = {
     comingSoon: "Coming soon",
     mapTitle: "Application example · Serra de Collserola",
     mapDesc: "Interactive 3D terrain map with the real Fauna-FO detection trace overlaid. Explore the relief, switch styles and toggle the data layers.",
+    mapDescMobile: "Real detection trace on Sierra de Collserola, with one stretch per technology in the AVIZOR Fauna range.",
     expand: "↗ Expand map",
     collapse: "↙ Collapse map",
     mapLoading: "Loading map…",
+    mapLegend: { fo: "Red · Fauna-FO", e: "Blue · Fauna-E", l: "Green · Fauna-L", b: "Purple · Fauna-B" },
     items: [
       {
         solName: "Buried optical fibre", ambito: "Long, open stretches", tagline: "Linear detection via C-OTDR",
@@ -342,9 +347,11 @@ const pt: Dict = {
     comingSoon: "Em breve",
     mapTitle: "Exemplo de aplicação · Serra de Collserola",
     mapDesc: "Mapa 3D interativo do terreno com o traçado real de deteção Fauna-FO sobreposto. Explore o relevo, mude de estilo e ative as camadas de dados.",
+    mapDescMobile: "Traçado real de deteção na Sierra de Collserola, com um troço por cada tecnologia da gama AVIZOR Fauna.",
     expand: "↗ Expandir mapa",
     collapse: "↙ Recolher mapa",
     mapLoading: "A carregar o mapa…",
+    mapLegend: { fo: "Vermelho · Fauna-FO", e: "Azul · Fauna-E", l: "Verde · Fauna-L", b: "Roxo · Fauna-B" },
     items: [
       {
         solName: "Fibra ótica enterrada", ambito: "Troços longos e abertos", tagline: "Deteção linear por C-OTDR",
@@ -475,9 +482,11 @@ const ca: Dict = {
     comingSoon: "Pròximament",
     mapTitle: "Exemple d'aplicació · Serra de Collserola",
     mapDesc: "Mapa 3D interactiu del terreny amb la traça real de detecció Fauna-FO superposada. Exploreu el relleu, canvieu d'estil i activeu les capes de dades.",
+    mapDescMobile: "Traça real de detecció a la Serra de Collserola, amb un tram per a cada tecnologia de la gamma AVIZOR Fauna.",
     expand: "↗ Ampliar mapa",
     collapse: "↙ Reduir mapa",
     mapLoading: "S'està carregant el mapa…",
+    mapLegend: { fo: "Vermell · Fauna-FO", e: "Blau · Fauna-E", l: "Verd · Fauna-L", b: "Morat · Fauna-B" },
     items: [
       {
         solName: "Fibra òptica enterrada", ambito: "Trams llargs i oberts", tagline: "Detecció lineal per C-OTDR",
