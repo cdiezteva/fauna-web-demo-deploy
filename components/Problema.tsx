@@ -1,10 +1,19 @@
 "use client";
 
+import Image from "next/image";
 import Reveal from "./Reveal";
 import DonutChart from "./DonutChart";
 import CountUp from "./CountUp";
 import { stats, speciesShare } from "@/lib/content";
 import { useI18n } from "@/lib/i18n";
+
+// Iconos alineados con el orden de speciesShare: Jabalíes, Corzos, Caninos, Otras especies.
+const speciesIcons = [
+  "/images/icons/jabali.png",
+  "/images/icons/corzo.png",
+  "/images/icons/perro.png",
+  "/images/icons/conejo.png",
+];
 
 // Solo animamos las cifras puramente numéricas: porcentajes (p. ej. "88%")
 // y enteros con separador de miles (p. ej. "36.087"); "≈ 1/3" y "×2" se
@@ -69,25 +78,36 @@ export default function Problema() {
 
         <Reveal delay={160}>
           <div className="border border-line rounded-xl p-6 md:p-9 mt-5">
-            <div className="flex items-center gap-8 md:gap-12 flex-wrap">
-              <DonutChart data={speciesShare} />
+            <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-12">
+              <div className="flex items-center gap-5 md:gap-8">
+                <DonutChart data={speciesShare} />
 
-              <div className="font-mono text-[11px] tracking-[.08em] uppercase text-[#8a9291] leading-relaxed max-w-[120px]">
-                {t.problema.speciesTitle}
+                <div className="font-mono text-[11px] tracking-[.08em] uppercase text-[#8a9291] leading-relaxed max-w-[160px] md:max-w-[120px]">
+                  {t.problema.speciesTitle}
+                </div>
               </div>
 
-              <div className="flex gap-6 md:gap-12 flex-wrap flex-1">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-5 md:gap-6 flex-1">
                 {speciesShare.map((s, i) => (
                   <div key={s.color + i}>
-                    <div className="flex items-center gap-2 text-sm text-[#4a5257] mb-1.5 whitespace-nowrap">
+                    <div className="flex items-center gap-2 text-[13px] md:text-sm text-[#4a5257] mb-1.5">
                       <span
                         className="w-2.5 h-2.5 rounded-full flex-none"
                         style={{ backgroundColor: s.color }}
                       />
                       {t.problema.species[i]}
                     </div>
-                    <div className="font-display font-bold text-2xl text-ink">
-                      <CountUp value={s.pct} />%
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src={speciesIcons[i]}
+                        alt=""
+                        width={32}
+                        height={32}
+                        className="flex-none w-6 h-6 md:w-8 md:h-8 object-contain"
+                      />
+                      <div className="font-display font-bold text-xl md:text-2xl text-ink">
+                        <CountUp value={s.pct} />%
+                      </div>
                     </div>
                   </div>
                 ))}
