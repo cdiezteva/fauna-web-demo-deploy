@@ -13,6 +13,8 @@ export default function Contacto() {
   const { t } = useI18n();
   const c = t.contacto;
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
 
   return (
     <section id="contacto" className="scroll-mt-[74px] bg-mist border-t border-line">
@@ -71,9 +73,24 @@ export default function Contacto() {
               </div>
             ) : (
               <form
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
-                  setSent(true);
+                  const email = (e.currentTarget.elements.namedItem("email") as HTMLInputElement).value;
+                  setError(false);
+                  setSending(true);
+                  try {
+                    const res = await fetch("/api/contacto", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ email }),
+                    });
+                    if (!res.ok) throw new Error("send_failed");
+                    setSent(true);
+                  } catch {
+                    setError(true);
+                  } finally {
+                    setSending(false);
+                  }
                 }}
                 className="bg-white border border-[#dde2e1] rounded-xl p-6 md:p-9 flex flex-col gap-6"
               >
@@ -103,14 +120,16 @@ export default function Contacto() {
                     type="email"
                     autoComplete="email"
                     required
+                    disabled={sending}
                     placeholder={c.pEmail}
                     className={`${inputClass} flex-1 min-w-[180px]`}
                   />
                   <button
                     type="submit"
-                    aria-label={c.submit}
-                    title={c.submit}
-                    className="flex-none flex items-center justify-center w-[46px] h-[46px] text-white bg-brand hover:bg-brand-dark transition-colors border-none rounded-md cursor-pointer"
+                    disabled={sending}
+                    aria-label={sending ? c.sending : c.submit}
+                    title={sending ? c.sending : c.submit}
+                    className="flex-none flex items-center justify-center w-[46px] h-[46px] text-white bg-brand hover:bg-brand-dark transition-colors border-none rounded-md cursor-pointer disabled:opacity-60 disabled:cursor-wait"
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <line x1="22" y1="2" x2="11" y2="13" />
@@ -118,6 +137,12 @@ export default function Contacto() {
                     </svg>
                   </button>
                 </div>
+
+                {error && (
+                  <p className="text-xs leading-relaxed text-red-600 m-0">
+                    {c.error}
+                  </p>
+                )}
 
                 <p className="text-xs leading-relaxed text-[#8a9291] m-0">
                   {c.privacy}

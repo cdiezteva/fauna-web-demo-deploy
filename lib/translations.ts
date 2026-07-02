@@ -28,7 +28,7 @@ export interface Dict {
     personLabel: string; phoneLabel: string; emailLabel: string; addressLabel: string;
     formTitle: string; formBody: string; perks: string[];
     fEmail: string; pEmail: string;
-    submit: string; privacy: string; sentTitle: string; sentBody: string;
+    submit: string; sending: string; error: string; privacy: string; sentTitle: string; sentBody: string;
   };
   footer: { blurb: string; tagline: string; navTitle: string; contactTitle: string; rights: string; legal: string };
 }
@@ -151,6 +151,8 @@ const es: Dict = {
     ],
     fEmail: "Email", pEmail: "nombre@administracion.es",
     submit: "Quiero recibir la documentación",
+    sending: "Enviando…",
+    error: "No se ha podido enviar. Inténtelo de nuevo en unos minutos.",
     privacy: "Sus datos se tratarán conforme a la normativa vigente de protección de datos. Solo utilizaremos su email para enviarle la documentación solicitada y, si lo desea, futuras novedades. Podrá darse de baja cuando quiera.",
     sentTitle: "¡Listo!",
     sentBody: "En breve recibirá el dossier técnico y la documentación en su email.",
@@ -282,6 +284,8 @@ const en: Dict = {
     ],
     fEmail: "Email", pEmail: "name@authority.es",
     submit: "Send me the documentation",
+    sending: "Sending…",
+    error: "Couldn't send it. Please try again in a few minutes.",
     privacy: "Your data will be processed in accordance with current data protection regulations. We will only use your email to send you the requested documentation and, if you wish, future updates. You can unsubscribe at any time.",
     sentTitle: "All set!",
     sentBody: "You'll receive the technical dossier and documentation in your inbox shortly.",
@@ -413,6 +417,8 @@ const pt: Dict = {
     ],
     fEmail: "Email", pEmail: "nome@administracao.pt",
     submit: "Quero receber a documentação",
+    sending: "A enviar…",
+    error: "Não foi possível enviar. Tente novamente dentro de alguns minutos.",
     privacy: "Os seus dados serão tratados de acordo com a legislação de proteção de dados em vigor. Utilizaremos o seu email apenas para lhe enviar a documentação solicitada e, se desejar, futuras novidades. Pode cancelar a subscrição quando quiser.",
     sentTitle: "Pronto!",
     sentBody: "Em breve receberá o dossiê técnico e a documentação no seu email.",
@@ -544,6 +550,8 @@ const ca: Dict = {
     ],
     fEmail: "Email", pEmail: "nom@administracio.cat",
     submit: "Vull rebre la documentació",
+    sending: "Enviant…",
+    error: "No s'ha pogut enviar. Torneu-ho a provar d'aquí a uns minuts.",
     privacy: "Les vostres dades es tractaran d'acord amb la normativa vigent de protecció de dades. Només utilitzarem el vostre email per enviar-vos la documentació sol·licitada i, si ho voleu, futures novetats. Us podreu donar de baixa quan vulgueu.",
     sentTitle: "Fet!",
     sentBody: "Rebreu el dossier tècnic i la documentació al vostre email en breu.",
