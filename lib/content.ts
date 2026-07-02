@@ -160,7 +160,7 @@ export const gama: GamaItem[] = [
       "Latencia < 1 s (LoRaWAN clase C) + 4G/LTE",
       "Autónomo, IP66 y API de integración con la DGT",
     ],
-    refs: ["Junta de Castilla y León — sistema de barreras láser"],
+    refs: ["Junta de Castilla-La Mancha — sistema de barreras láser"],
     refTags: [{ label: "JCCM", ref: "ref-jcyl" }],
     image: "/images/baliza-laser.jpg",
     video: "/videos/lasers.mp4",
@@ -289,7 +289,7 @@ export const references = [
   },
   {
     id: "ref-jcyl",
-    name: "Junta de Castilla y León",
+    name: "Junta de Castilla-La Mancha",
     scope: "Detección por barreras láser con avisos automáticos para la seguridad vial.",
     sol: "Fauna-L",
     target: "sol-l",
