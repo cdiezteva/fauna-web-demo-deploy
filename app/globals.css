@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  /* Compensa la cabecera fija para que los enlaces ancla no queden ocultos. */
+  scroll-padding-top: 96px;
+}
+
+body {
+  background: #f6f7f7;
+  color: #16191b;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: #96acbd;
+  color: #0f1514;
+}
+
+.balance {
+  text-wrap: balance;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.grid-overlay {
+  background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.hairline-diag {
+  background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 14px, transparent 14px 28px);
+}
+
+/* Flujo de información izquierda → derecha (sección Detecta · Alerta · Protege) */
+@keyframes flowDot {
+  0%   { left: 0%;   opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+.flow-dot {
+  animation: flowDot 6.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+.flow-dot-2 {
+  animation: flowDot 6.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-delay: 3.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-dot, .flow-dot-2 { animation: none; opacity: 0; }
+}
