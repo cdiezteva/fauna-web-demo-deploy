@@ -27,7 +27,7 @@ export default function Descargas() {
         {/* Dos columnas de filas finas y rectangulares: dossier PDF + vídeos.
             Placeholder: sin enlace de descarga por ahora (se muestran como
             "Próximamente"); las rutas reales siguen en content.ts → downloads. */}
-        <div className="grid md:grid-cols-2 gap-3 md:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
           <Reveal className="h-full">
             <div
               aria-disabled
