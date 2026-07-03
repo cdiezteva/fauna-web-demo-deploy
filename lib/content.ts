@@ -151,7 +151,7 @@ export const gama: GamaItem[] = [
     solName: "Analítica de vídeo",
     ambito: "Enlaces, accesos y puntos discretos",
     tint: "#1C2836",
-    bg: "/images/gama-e.jpg",
+    bg: "", // placeholder: pendiente de sustituir por imagen definitiva
     tagline: "Cámara IR + IVS",
     desc: "Cámara con analítica de vídeo embebida y foco IR de 850 nm (IP68/IK10) que distingue animal, vehículo o persona. Pensada para enlaces de autovía/autopista, accesos y puntos concretos delimitados.",
     specs: [
@@ -176,7 +176,7 @@ export const gama: GamaItem[] = [
     solName: "Barrera láser multihaz",
     ambito: "Perímetros y pasos recurrentes de fauna",
     tint: "#202C42",
-    bg: "/images/gama-l.jpg",
+    bg: "", // placeholder: pendiente de sustituir por imagen definitiva
     tagline: "Corte simultáneo de 4 haces IR",
     desc: "Detectores en ambos márgenes forman un perímetro virtual continuo por corte de cuatro haces láser infrarrojos. Escenario idóneo: perímetros de tramos abiertos y puntos negros / TEFIVA con mínima falsa alarma.",
     specs: [

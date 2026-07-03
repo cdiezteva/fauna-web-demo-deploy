@@ -124,6 +124,7 @@ export default function Problema() {
   const { t, lang } = useI18n();
   const locale = LOCALES[lang];
   const formatLocale = (n: number) => n.toLocaleString(locale);
+  const [hoveredSpecies, setHoveredSpecies] = useState<number | null>(null);
 
   return (
     <section id="problema" className="scroll-mt-[74px] bg-white">
@@ -142,7 +143,7 @@ export default function Problema() {
           </p>
         </Reveal>
 
-        {/* Top 4 · tarjetas de cifras (iconos igualados por ancho) */}
+        {/* Top 4 · tarjetas de cifras (iconos igualados por alto) */}
         <Reveal delay={100}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 mt-14">
             {stats.map((s, i) => {
@@ -151,10 +152,18 @@ export default function Problema() {
               return (
                 <div
                   key={s.figure + i}
-                  className="bg-white border border-line rounded-xl p-5 md:p-6"
+                  className="group bg-white border border-line rounded-xl p-5 md:p-6 transition-all duration-300 hover:border-brand/40 hover:shadow-[0_10px_30px_-12px_rgba(59,102,194,.25)] motion-safe:hover:-translate-y-1"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="font-display font-bold text-[26px] md:text-[32px] tracking-[-.01em] text-brand">
+                  <div className="flex items-center gap-3">
+                    <Image
+                      src={statIcons[i]}
+                      alt=""
+                      aria-hidden
+                      width={64}
+                      height={64}
+                      className="flex-none h-10 md:h-11 w-auto transition-transform duration-300 ease-out motion-safe:group-hover:scale-110"
+                    />
+                    <div className="font-display font-bold text-[26px] md:text-[32px] tracking-[-.01em] text-brand transition-colors duration-300 group-hover:text-brand-dark">
                       {pct !== null ? (
                         <><CountUp value={pct} />%</>
                       ) : thousands !== null ? (
@@ -163,14 +172,6 @@ export default function Problema() {
                         s.figure
                       )}
                     </div>
-                    <Image
-                      src={statIcons[i]}
-                      alt=""
-                      aria-hidden
-                      width={64}
-                      height={64}
-                      className="flex-none w-12 md:w-14 h-auto"
-                    />
                   </div>
                   <div className="text-[13px] leading-snug text-[#6b7378] mt-2">
                     {t.problema.statLabels[i]}
@@ -184,34 +185,38 @@ export default function Problema() {
         {/* Medio · especies + lince */}
         <div className="grid md:grid-cols-2 gap-4 md:gap-5 mt-4 md:mt-5">
           <Reveal delay={160} className="h-full">
-            <div className="border border-line rounded-xl p-6 md:p-8 h-full">
+            <div className="group/card border border-line rounded-xl p-6 md:p-8 h-full transition-all duration-300 hover:border-brand/30 hover:shadow-[0_10px_30px_-12px_rgba(59,102,194,.2)] motion-safe:hover:-translate-y-1">
               <div className="font-mono text-[11px] tracking-[.14em] uppercase text-[#8a9291] mb-6">
                 {t.problema.speciesTitle}
               </div>
               <div className="flex items-center gap-6 md:gap-8 flex-wrap">
-                <DonutChart data={speciesShare} size={180} thickness={26} />
-                <div className="flex flex-col gap-3.5 flex-1 min-w-[200px]">
+                <div className="transition-transform duration-500 ease-out motion-safe:group-hover/card:scale-105">
+                  <DonutChart data={speciesShare} size={180} thickness={26} activeIndex={hoveredSpecies} />
+                </div>
+                <div className="flex flex-col gap-1.5 flex-1 min-w-[200px]">
                   {speciesShare.map((s, i) => (
                     <div
                       key={s.color + i}
-                      className="grid grid-cols-[26px_1fr_auto] items-center gap-2.5"
+                      onMouseEnter={() => setHoveredSpecies(i)}
+                      onMouseLeave={() => setHoveredSpecies(null)}
+                      className="group/row grid grid-cols-[26px_1fr_auto] items-center gap-2.5 rounded-lg px-2 -mx-2 py-1 transition-colors duration-200 hover:bg-mist/70"
                     >
                       <Image
                         src={speciesIcons[i]}
                         alt=""
                         width={32}
                         height={32}
-                        className="w-[26px] h-[26px] object-contain"
+                        className="w-[26px] h-[26px] object-contain transition-transform duration-300 ease-out motion-safe:group-hover/row:scale-125"
                       />
                       <span className="flex items-center gap-2 text-sm text-[#4a5257]">
                         <span
-                          className="w-[9px] h-[9px] rounded-full flex-none"
+                          className="w-[9px] h-[9px] rounded-full flex-none transition-transform duration-300 motion-safe:group-hover/row:scale-125"
                           style={{ backgroundColor: s.color }}
                         />
                         {t.problema.species[i]}
                       </span>
                       <span
-                        className="font-display font-bold text-lg"
+                        className="font-display font-bold text-lg transition-transform duration-300 motion-safe:group-hover/row:scale-110"
                         style={{
                           color:
                             s.color === "#d8dcdb"
@@ -231,12 +236,14 @@ export default function Problema() {
           </Reveal>
 
           <Reveal delay={220} className="h-full">
-            <div className="border border-line rounded-xl p-6 md:p-8 h-full">
+            <div className="group/card border border-line rounded-xl p-6 md:p-8 h-full transition-all duration-300 hover:border-brand/30 hover:shadow-[0_10px_30px_-12px_rgba(59,102,194,.2)] motion-safe:hover:-translate-y-1">
               <div className="font-mono text-[11px] tracking-[.14em] uppercase text-[#8a9291] mb-6">
                 {t.problema.linceTag}
               </div>
               <div className="flex items-center gap-6 md:gap-8 flex-wrap">
-                <LinceGauge label={t.problema.linceGauge} locale={locale} />
+                <div className="transition-transform duration-500 ease-out motion-safe:group-hover/card:scale-105">
+                  <LinceGauge label={t.problema.linceGauge} locale={locale} />
+                </div>
                 <div className="flex-1 min-w-[210px]">
                   <div className="flex items-baseline gap-3 py-3 border-b border-mist">
                     <b className="font-display font-bold text-[26px] text-ink min-w-[64px]">

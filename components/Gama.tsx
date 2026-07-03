@@ -109,22 +109,33 @@ export default function Gama() {
                   flexShrink: 1,
                   flexBasis: 0,
                   backgroundColor: g.tint,
-                  backgroundImage: `${
-                    isActive
-                      ? "linear-gradient(180deg, transparent 45%, rgba(0,0,0,.7) 100%)"
-                      : "linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.55) 100%)"
-                  }, url(${g.bg})`,
+                  backgroundImage: g.bg
+                    ? `${
+                        isActive
+                          ? "linear-gradient(180deg, transparent 45%, rgba(0,0,0,.7) 100%)"
+                          : "linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.55) 100%)"
+                      }, url(${g.bg})`
+                    : undefined,
                   backgroundSize: "cover",
                   backgroundPosition: g.id === "sol-li" ? "35% center" : "center",
                   boxShadow: isActive ? "inset 0 0 0 2px #A9BFCF" : "none",
                 }}
               >
+                {/* Placeholder mientras no hay imagen definitiva para esta tarjeta. */}
+                {!g.bg && (
+                  <span aria-hidden className="hairline-diag pointer-events-none absolute inset-0" />
+                )}
                 {/* Oscurece la imagen de las tarjetas no seleccionadas (el título queda por encima). */}
                 {!isActive && (
                   <span
                     aria-hidden
                     className="pointer-events-none absolute inset-0 bg-black/55 group-hover:bg-black/30 transition-colors duration-[450ms]"
                   />
+                )}
+                {!g.bg && !isActive && (
+                  <span className="pointer-events-none absolute bottom-6 left-5 z-10 font-mono text-[10px] tracking-[.15em] uppercase text-white/60">
+                    {t.gama.comingSoon}
+                  </span>
                 )}
                 <div
                   className={`relative z-10 font-display font-bold tracking-[-.01em] text-white [text-shadow:0_2px_16px_rgba(0,0,0,.8),0_0_2px_rgba(0,0,0,.5)] transition-[font-size] duration-300 ${

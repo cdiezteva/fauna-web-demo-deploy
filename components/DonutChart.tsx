@@ -15,11 +15,14 @@ export default function DonutChart({
   size = 120,
   thickness = 22,
   duration = 1.1,
+  activeIndex = null,
 }: {
   data: Segment[];
   size?: number;
   thickness?: number;
   duration?: number;
+  /** Índice del segmento a resaltar (p. ej. al pasar el ratón por su fila en la leyenda). */
+  activeIndex?: number | null;
 }) {
   const [on, setOn] = useState(false);
   const [reduce, setReduce] = useState(false);
@@ -87,24 +90,36 @@ export default function DonutChart({
       </defs>
 
       <g mask={`url(#${maskId})`}>
-        {data.map((s, i) => {
-          const len = (s.pct / 100) * C;
-          const startDeg = (acc / 100) * 360 - 90; // -90 → starts at the top
-          acc += s.pct;
-          return (
-            <circle
-              key={i}
-              cx={c}
-              cy={c}
-              r={r}
-              fill="none"
-              stroke={s.color}
-              strokeWidth={thickness}
-              transform={`rotate(${startDeg} ${c} ${c})`}
-              strokeDasharray={`${len} ${C}`}
-            />
-          );
-        })}
+        {data
+          .map((s, i) => {
+            const len = (s.pct / 100) * C;
+            const startDeg = (acc / 100) * 360 - 90; // -90 → starts at the top
+            acc += s.pct;
+            return { ...s, i, len, startDeg };
+          })
+          // El segmento activo se dibuja el último para quedar por encima al engrosarse.
+          .sort((a, b) => (a.i === activeIndex ? 1 : b.i === activeIndex ? -1 : 0))
+          .map((s) => {
+            const isActive = s.i === activeIndex;
+            const isDimmed = activeIndex != null && !isActive;
+            return (
+              <circle
+                key={s.i}
+                cx={c}
+                cy={c}
+                r={r}
+                fill="none"
+                stroke={s.color}
+                transform={`rotate(${s.startDeg} ${c} ${c})`}
+                strokeDasharray={`${s.len} ${C}`}
+                style={{
+                  strokeWidth: isActive ? thickness + 6 : thickness,
+                  opacity: isDimmed ? 0.35 : 1,
+                  transition: "stroke-width .3s cubic-bezier(.2,.7,.2,1), opacity .3s ease",
+                }}
+              />
+            );
+          })}
       </g>
     </svg>
   );
