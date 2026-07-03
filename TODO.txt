@@ -1,0 +1,64 @@
+// GENERAL
+ajustar tamaño de fuentes
+Información de la DGT hay que consultar con ellos
+Cambiar "conectividad con dgt 3.0" a "preparado para dgt 3.0"
+Darle valor a la placa mediante video o foto / sección propia o integrado con la app
+Acentuar los sistemas de solución **autonomos**
+
+// HERO y HEADER
+Logotipo ministerio de transportes
+incrementar tamaño logo avizor y animarlo con fondo transparente
+agregar logo JCyL
+
+//EL PROBLEMA
+Agregar iconos a las stats:
+Siniestros -> el que tenemos
+vias interurbanas -> autovia
+carretera conv -> carretera
+decadda -> flecha de incremento
+Estudiar la posibilidad de graficar las estadísticas de los animales,
+Buscar datos que hagan referencia a los linces
+Buscar forma de animar y darle dinamismo
+Poner titulo La solución al apartado D.A.P
++Animaciones y mejora gráfica
+a medida que se mueve el punto que aparezca un video o animación relacionado con el punto
+(Detecta: Detección del animal con infrarrojo/térmica
+ Alerta: Señal parpadeando alertando conductor
+ Protege: Coche frenando por aviso de la señal)
+
+//EL MAPA
+Cambiar vistas preconfiguradas
+Filtros:
+	Vistas predeterminadas según zona (Jaén, Somacyl y sierra collserola)
+	Al hacer click encima de la solución se muestra contenido multimedia
+
+btn ir a demo?
+
+//LA GAMA
+cambiar "la gama" por "las soluciones" /"la solucion"
+elementos no seleccionados + contraste o ByN
+JCCM no hay info por ser obra en curso
+Video de la fibra óptica:
+Animación de ondas repercutiendo, animal transmite vibración al cable y que cambie el color del cable
+Fauna - E:
+Eliminar detalles técnicos
+Interesa + el concepto de captación que la señal física
+Fauna - B:
+**Mostrar video de cadena de balizas iluminando la carretera (Opcional, no hará falta)
+Fauna - L: Cambiar imagen de sección
+Rampas de escape sensorizadas?
+
+// LA  APLICACIÓN
+Video integrando puntos clave de la app
+Video de corzo
+
+// NUEVA SECCIÓN DE DESCARGABLE PÚBLICOS
+Contendrá descargables y contenido multimedia
+hacer placeholders para pdf's y videos
+
+//CONTACTO
+CAmbiar info de Nuno por info institucional / contacto empresarial
+En el form de contacto, solicitar más detalles del interesado
+
+// DOMINIO:
+		avizorfauna.com

@@ -103,7 +103,7 @@ export default function Gama() {
                 key={g.id}
                 type="button"
                 onClick={() => handleSelect(g.id)}
-                className="text-left cursor-pointer text-white border-none font-sans flex flex-col justify-between px-5 py-7 min-w-[130px] min-h-[220px] md:min-h-[500px] border-b md:border-b-0 md:border-r border-white/10 last:border-b-0 md:last:border-r-0 transition-[flex-grow,box-shadow,filter] duration-[450ms] hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:-outline-offset-2"
+                className="group relative overflow-hidden text-left cursor-pointer text-white border-none font-sans flex flex-col justify-between px-5 py-7 min-w-[130px] min-h-[220px] md:min-h-[500px] border-b md:border-b-0 md:border-r border-white/10 last:border-b-0 md:last:border-r-0 transition-[flex-grow,box-shadow] duration-[450ms] focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:-outline-offset-2"
                 style={{
                   flexGrow: isActive ? 3 : 1,
                   flexShrink: 1,
@@ -111,7 +111,7 @@ export default function Gama() {
                   backgroundColor: g.tint,
                   backgroundImage: `${
                     isActive
-                      ? "linear-gradient(180deg, transparent 30%, rgba(0,0,0,1) 100%)"
+                      ? "linear-gradient(180deg, transparent 45%, rgba(0,0,0,.7) 100%)"
                       : "linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.55) 100%)"
                   }, url(${g.bg})`,
                   backgroundSize: "cover",
@@ -119,8 +119,15 @@ export default function Gama() {
                   boxShadow: isActive ? "inset 0 0 0 2px #A9BFCF" : "none",
                 }}
               >
+                {/* Oscurece la imagen de las tarjetas no seleccionadas (el título queda por encima). */}
+                {!isActive && (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-black/55 group-hover:bg-black/30 transition-colors duration-[450ms]"
+                  />
+                )}
                 <div
-                  className={`font-display font-bold tracking-[-.01em] text-white [text-shadow:0_2px_16px_rgba(0,0,0,.8),0_0_2px_rgba(0,0,0,.5)] transition-[font-size] duration-300 ${
+                  className={`relative z-10 font-display font-bold tracking-[-.01em] text-white [text-shadow:0_2px_16px_rgba(0,0,0,.8),0_0_2px_rgba(0,0,0,.5)] transition-[font-size] duration-300 ${
                     isActive ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"
                   }`}
                 >
@@ -128,7 +135,7 @@ export default function Gama() {
                 </div>
 
                 {isActive && (
-                  <div className="animate-fadeUp">
+                  <div className="relative z-10 animate-fadeUp">
                     <div className="text-lg md:text-xl font-semibold leading-snug text-white [text-shadow:0_1px_12px_rgba(0,0,0,.9)]">
                       {g.ambito}
                     </div>

@@ -314,10 +314,9 @@ export const references = [
 ];
 
 export const contact = {
-  person: "Nuno Pereira",
-  phone: "+34 605 493 338",
-  phoneHref: "+34605493338",
-  email: "npereira@grupoteva.com",
+  phone: "+34 914 904 552",
+  phoneHref: "+34914904552",
+  email: "teva@grupoteva.com",
   address: "C/ Valportillo Segunda, 14 · 28108 Alcobendas (Madrid)",
   web: "www.grupoteva.com",
   webHref: "https://www.grupoteva.com",
@@ -341,6 +340,7 @@ export const gamaOptions = [
 // scripts/ o el proceso de generación en public/images/*-hero.png.
 export const trustLogos = [
   { name: "MITMA", src: "/images/logo-ministerio-transp-hero.png" },
+  { name: "Junta de Castilla y León", src: "/images/logo-junta-castilla-y-leon-hero.png" },
   { name: "JCyL · Somacyl", src: "/images/logo-somacyl-hero.png" },
   { name: "Junta de Andalucía", src: "/images/logo-juntaA-hero.png" },
   { name: "DGT", src: "/images/logo-dgt-hero.png" },

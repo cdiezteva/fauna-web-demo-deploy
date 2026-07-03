@@ -26,16 +26,20 @@ export interface Dict {
   referencias: { label: string; title: string; items: { name: string; scope: string; points?: string[] }[] };
   contacto: {
     label: string; title: string; subtitle: string;
+    reachOut: string;
     personLabel: string; phoneLabel: string; emailLabel: string; addressLabel: string;
     formTitle: string; formBody: string; perks: string[];
     fEmail: string; pEmail: string;
+    fName: string; pName: string;
+    fParty: string; partyOptions: string[];
+    fInterest: string; pInterest: string;
     submit: string; sending: string; error: string; privacy: string; sentTitle: string; sentBody: string;
   };
   footer: { blurb: string; tagline: string; navTitle: string; contactTitle: string; rights: string; legal: string };
 }
 
 const es: Dict = {
-  nav: { problema: "El problema", gama: "La gama", plataforma: "Plataforma", referencias: "Referencias", contacto: "Contacto" },
+  nav: { problema: "El problema", gama: "Las soluciones", plataforma: "Plataforma", referencias: "Referencias", contacto: "Contacto" },
   hero: {
     eyebrow: "Detección inteligente de fauna · Señalización activa",
     titleA: "Del aviso permanente",
@@ -70,7 +74,7 @@ const es: Dict = {
     species: ["Jabalíes", "Corzos", "Caninos", "Otras especies"],
   },
   gama: {
-    label: "La gama",
+    label: "Las soluciones",
     title: "Una solución para cada ámbito de la vía.",
     subtitle: "Cada escenario de riesgo pide una tecnología distinta. Seleccione el ámbito y acceda a la solución correspondiente.",
     ambitoWord: "Ámbito",
@@ -144,6 +148,7 @@ const es: Dict = {
     label: "Contacto",
     title: "Reciba el dossier técnico y la documentación de AVIZOR Fauna.",
     subtitle: "Casos de referencia, especificaciones técnicas y las últimas novedades del producto, directamente en su email.",
+    reachOut: "Contacte con nosotros",
     personLabel: "Persona de contacto", phoneLabel: "Teléfono", emailLabel: "Email", addressLabel: "Dirección",
     formTitle: "Reciba nuestra documentación",
     formBody: "Déjenos su email y le enviaremos el dossier técnico en PDF y el resto de material informativo.",
@@ -153,6 +158,10 @@ const es: Dict = {
       "Novedades de producto y normativa",
     ],
     fEmail: "Email", pEmail: "nombre@administracion.es",
+    fName: "Nombre y entidad", pName: "Nombre y organización",
+    fParty: "¿Quién realiza la consulta?",
+    partyOptions: ["Administración pública", "Empresa / ingeniería", "Universidad / investigación", "Otro"],
+    fInterest: "¿Qué información necesita y con qué fin?", pInterest: "Cuéntenos qué busca (una solución concreta, datos técnicos, referencias…) y para qué proyecto o finalidad.",
     submit: "Quiero recibir la documentación",
     sending: "Enviando…",
     error: "No se ha podido enviar. Inténtelo de nuevo en unos minutos.",
@@ -170,7 +179,7 @@ const es: Dict = {
 };
 
 const en: Dict = {
-  nav: { problema: "The problem", gama: "The range", plataforma: "Platform", referencias: "References", contacto: "Contact" },
+  nav: { problema: "The problem", gama: "Solutions", plataforma: "Platform", referencias: "References", contacto: "Contact" },
   hero: {
     eyebrow: "Intelligent wildlife detection · Active signage",
     titleA: "From static warning",
@@ -205,7 +214,7 @@ const en: Dict = {
     species: ["Wild boar", "Roe deer", "Canids", "Other species"],
   },
   gama: {
-    label: "The range",
+    label: "Solutions",
     title: "A solution for every stretch of road.",
     subtitle: "Each risk scenario calls for a different technology. Select the context and access the matching solution.",
     ambitoWord: "Context",
@@ -279,6 +288,7 @@ const en: Dict = {
     label: "Contact",
     title: "Get the technical dossier and documentation for AVIZOR Fauna.",
     subtitle: "Reference cases, technical specifications and the latest product updates, straight to your inbox.",
+    reachOut: "Contact us",
     personLabel: "Contact person", phoneLabel: "Phone", emailLabel: "Email", addressLabel: "Address",
     formTitle: "Receive our documentation",
     formBody: "Leave your email and we'll send you the PDF dossier plus the rest of the informational material.",
@@ -288,6 +298,10 @@ const en: Dict = {
       "Product and regulation updates",
     ],
     fEmail: "Email", pEmail: "name@authority.es",
+    fName: "Name and organisation", pName: "Name and organisation",
+    fParty: "Who is making the enquiry?",
+    partyOptions: ["Public administration", "Company / engineering", "University / research", "Other"],
+    fInterest: "What information do you need, and what for?", pInterest: "Tell us what you're looking for (a specific solution, technical data, references…) and for which project or purpose.",
     submit: "Send me the documentation",
     sending: "Sending…",
     error: "Couldn't send it. Please try again in a few minutes.",
@@ -305,7 +319,7 @@ const en: Dict = {
 };
 
 const pt: Dict = {
-  nav: { problema: "O problema", gama: "A gama", plataforma: "Plataforma", referencias: "Referências", contacto: "Contacto" },
+  nav: { problema: "O problema", gama: "As soluções", plataforma: "Plataforma", referencias: "Referências", contacto: "Contacto" },
   hero: {
     eyebrow: "Deteção inteligente de fauna · Sinalização ativa",
     titleA: "Do aviso permanente",
@@ -340,7 +354,7 @@ const pt: Dict = {
     species: ["Javalis", "Corços", "Canídeos", "Outras espécies"],
   },
   gama: {
-    label: "A gama",
+    label: "As soluções",
     title: "Uma solução para cada troço da via.",
     subtitle: "Cada cenário de risco exige uma tecnologia diferente. Selecione o contexto e aceda à solução correspondente.",
     ambitoWord: "Contexto",
@@ -414,6 +428,7 @@ const pt: Dict = {
     label: "Contacto",
     title: "Receba o dossiê técnico e a documentação da AVIZOR Fauna.",
     subtitle: "Casos de referência, especificações técnicas e as últimas novidades do produto, diretamente no seu email.",
+    reachOut: "Contacte-nos",
     personLabel: "Pessoa de contacto", phoneLabel: "Telefone", emailLabel: "Email", addressLabel: "Morada",
     formTitle: "Receba a nossa documentação",
     formBody: "Deixe-nos o seu email e enviaremos o dossiê técnico em PDF e o restante material informativo.",
@@ -423,6 +438,10 @@ const pt: Dict = {
       "Novidades de produto e regulamentação",
     ],
     fEmail: "Email", pEmail: "nome@administracao.pt",
+    fName: "Nome e entidade", pName: "Nome e organização",
+    fParty: "Quem faz o contacto?",
+    partyOptions: ["Administração pública", "Empresa / engenharia", "Universidade / investigação", "Outro"],
+    fInterest: "Que informação necessita e com que finalidade?", pInterest: "Diga-nos o que procura (uma solução concreta, dados técnicos, referências…) e para que projeto ou finalidade.",
     submit: "Quero receber a documentação",
     sending: "A enviar…",
     error: "Não foi possível enviar. Tente novamente dentro de alguns minutos.",
@@ -440,7 +459,7 @@ const pt: Dict = {
 };
 
 const ca: Dict = {
-  nav: { problema: "El problema", gama: "La gamma", plataforma: "Plataforma", referencias: "Referències", contacto: "Contacte" },
+  nav: { problema: "El problema", gama: "Les solucions", plataforma: "Plataforma", referencias: "Referències", contacto: "Contacte" },
   hero: {
     eyebrow: "Detecció intel·ligent de fauna · Senyalització activa",
     titleA: "De l'avís permanent",
@@ -475,7 +494,7 @@ const ca: Dict = {
     species: ["Senglars", "Cabirols", "Cànids", "Altres espècies"],
   },
   gama: {
-    label: "La gamma",
+    label: "Les solucions",
     title: "Una solució per a cada tram de la via.",
     subtitle: "Cada escenari de risc demana una tecnologia diferent. Seleccioneu el context i accediu a la solució corresponent.",
     ambitoWord: "Context",
@@ -549,6 +568,7 @@ const ca: Dict = {
     label: "Contacte",
     title: "Rebeu el dossier tècnic i la documentació d'AVIZOR Fauna.",
     subtitle: "Casos de referència, especificacions tècniques i les últimes novetats del producte, directament al vostre correu.",
+    reachOut: "Contacteu amb nosaltres",
     personLabel: "Persona de contacte", phoneLabel: "Telèfon", emailLabel: "Email", addressLabel: "Adreça",
     formTitle: "Rebeu la nostra documentació",
     formBody: "Deixeu-nos el vostre email i us enviarem el dossier tècnic en PDF i la resta de material informatiu.",
@@ -558,6 +578,10 @@ const ca: Dict = {
       "Novetats de producte i normativa",
     ],
     fEmail: "Email", pEmail: "nom@administracio.cat",
+    fName: "Nom i entitat", pName: "Nom i organització",
+    fParty: "Qui fa la consulta?",
+    partyOptions: ["Administració pública", "Empresa / enginyeria", "Universitat / recerca", "Altres"],
+    fInterest: "Quina informació necessiteu i amb quina finalitat?", pInterest: "Digueu-nos què busqueu (una solució concreta, dades tècniques, referències…) i per a quin projecte o finalitat.",
     submit: "Vull rebre la documentació",
     sending: "Enviant…",
     error: "No s'ha pogut enviar. Torneu-ho a provar d'aquí a uns minuts.",
