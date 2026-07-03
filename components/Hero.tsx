@@ -53,7 +53,9 @@ export default function Hero() {
                 alt={logo.name}
                 width={260}
                 height={84}
-                className="h-8 md:h-14 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
+                className={`${logo.h ?? "h-8 md:h-14"} w-auto object-contain opacity-90 hover:opacity-100 transition-opacity ${
+                  logo.invert ? "brightness-0 invert" : ""
+                }`}
               />
             ))}
           </div>

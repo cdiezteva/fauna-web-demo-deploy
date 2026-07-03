@@ -18,6 +18,30 @@ export const speciesShare = [
   { pct: 18, label: "Otras especies", color: "#d8dcdb" },
 ];
 
+// Lince ibérico · 2025 (MITECO, censo 2025): 273 muertes detectadas,
+// 212 (77,9 %) por atropello en infraestructuras viarias.
+export const lynx = { deaths: 273, roadkill: 212, pctTenths: 779 };
+export const lynxSourceUrl =
+  "https://www.miteco.gob.es/es/prensa/ultimas-noticias/2026/junio/la-poblacion-de-lince-iberico-alcanzo-los-2-663-ejemplares-en-20.html";
+
+// Evolución de siniestros con animales 2015–2024 (DGT, Observatorio
+// Nacional de Seguridad Vial). Orden de las series = orden de apilado
+// (de abajo arriba): Canino, Otros, Corzo, Jabalí — se etiquetan por
+// índice con t.problema.chartSpecies.
+export const evolutionYears = [
+  "2015", "2016", "2017", "2018", "2019",
+  "2020", "2021", "2022", "2023", "2024",
+];
+export const evolutionSeries = [
+  { color: "#A9BFCF", data: [3472, 3725, 3802, 4011, 3688, 2829, 2968, 3155, 3278, 3058] },
+  { color: "#d8dcdb", data: [3513, 3891, 4813, 4882, 5235, 4699, 5492, 5823, 6277, 6313] },
+  { color: "#6F93D6", data: [4926, 6027, 7641, 7755, 8960, 8523, 10778, 12397, 11032, 11656] },
+  { color: "#1F4A9E", data: [6674, 8987, 10099, 10871, 11384, 11628, 12744, 14278, 14455, 15049] },
+];
+export const evolutionTotals = { from: 18587, to: 36087 };
+export const evolutionSourceUrl =
+  "https://www.dgt.es/menusecundario/dgt-en-cifras/dgt-en-cifras-resultados/dgt-en-cifras-detalle/Siniestralidad-vial-con-implicacion-de-animales-00001/";
+
 export const comparison = {
   traditional: [
     "Vallados y pasos de fauna: costosos e invasivos.",
@@ -119,7 +143,7 @@ export const gama: GamaItem[] = [
     ],
     refs: [],
     image: "/images/carretera-fo.jpg",
-    video: "/videos/FO-moving.mp4",
+    video: "/videos/fo-video.mp4",
   },
   {
     id: "sol-e",
@@ -313,6 +337,18 @@ export const references = [
   },
 ];
 
+// Sección "Descargas": dossier técnico y vídeos de producto/referencias.
+// Los nombres visibles se traducen en t.descargas; aquí solo rutas y tamaños.
+export const downloads = {
+  dossier: { href: "/docs/AVIZOR-Fauna-Dossier.pdf", size: "1,4 MB" },
+  videos: [
+    { href: "/videos/demo-deteccion.mp4", size: "14 MB" },
+    { href: "/videos/Sierra-Francia-Senal.mp4", size: "0,5 MB" },
+    { href: "/videos/animacion_baliza.mp4", size: "2,7 MB" },
+    { href: "/videos/demoavizorcloud.mp4", size: "1,1 MB" },
+  ],
+};
+
 export const contact = {
   phone: "+34 914 904 552",
   phoneHref: "+34914904552",
@@ -338,7 +374,11 @@ export const gamaOptions = [
 // Versiones "hero": silueta blanca sobre fondo transparente (sin caja blanca),
 // pensadas para mostrarse sobre el vídeo oscuro del hero. Ver
 // scripts/ o el proceso de generación en public/images/*-hero.png.
-export const trustLogos = [
+// `invert: true` blanquea en el navegador un logo de color (negro sobre
+// transparente) con CSS, sin necesidad de una versión -hero.png prehorneada.
+// `h` permite ajustar la altura de un logo concreto (los que tienen más
+// margen interno necesitan más altura para verse del mismo tamaño).
+export const trustLogos: { name: string; src: string; invert?: boolean; h?: string }[] = [
   { name: "MITMA", src: "/images/logo-ministerio-transp-hero.png" },
   { name: "Junta de Castilla y León", src: "/images/logo-junta-castilla-y-leon-hero.png" },
   { name: "JCyL · Somacyl", src: "/images/logo-somacyl-hero.png" },

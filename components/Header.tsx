@@ -12,6 +12,7 @@ export default function Header() {
     { href: "#gama", label: t.nav.gama },
     { href: "#plataforma", label: t.nav.plataforma },
     { href: "#referencias", label: t.nav.referencias },
+    { href: "#descargas", label: t.nav.descargas },
   ];
 
   // `solid` = el usuario ha salido del hero → cabecera blanca con blur.
@@ -61,18 +62,21 @@ export default function Header() {
       <div className="max-w-[1220px] mx-auto px-5 md:px-11 py-4 md:py-5 flex items-center justify-between gap-6">
         <a href="#inicio" className="flex items-center gap-3 relative">
           <Image
-            src="/images/avizor_logo.png"
+            src="/images/avizor-logo.webp"
             alt="AVIZOR"
-            width={660}
-            height={660}
+            width={512}
+            height={512}
             priority
-            className="h-9 md:h-10 w-auto"
+            unoptimized
+            className={`w-auto transition-[height] duration-300 ${
+              solidLook ? "h-11 md:h-14" : "h-16 md:h-[84px]"
+            }`}
           />
           <span
-            className={`text-base font-medium transition-colors duration-300 ${
+            className={`font-medium transition-all duration-300 ${
               solidLook
-                ? "text-[#3d454a]"
-                : "text-white [text-shadow:0_1px_8px_rgba(0,0,0,.5)]"
+                ? "text-base text-[#3d454a]"
+                : "text-xl md:text-2xl text-white [text-shadow:0_1px_8px_rgba(0,0,0,.5)]"
             }`}
           >
             Fauna

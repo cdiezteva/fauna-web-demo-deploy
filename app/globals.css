@@ -62,3 +62,29 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .flow-dot, .flow-dot-2 { animation: none; opacity: 0; }
 }
+
+/* --- Densidad compacta para portátiles (pantallas más bajas que ~1080p) ---
+   Reduce el espaciado vertical y las alturas fijas más grandes para que cada
+   sección quepa mejor en pantallas de portátil sin tanto scroll. Solo afecta
+   al layout de escritorio (≥1024px de ancho) y a alturas ≤ 900px. */
+@media (min-width: 1024px) and (max-height: 900px) {
+  section > div {
+    padding-top: 3.5rem !important;
+    padding-bottom: 3.5rem !important;
+  }
+  /* Menos separación bajo los títulos de sección. */
+  section h2 { margin-bottom: 1.25rem !important; }
+  /* Tarjetas de "Las soluciones" y "Referencias" más bajas. */
+  .md\:min-h-\[500px\] { min-height: 360px !important; }
+  .md\:h-\[620px\] { height: 480px !important; }
+}
+
+/* Portátiles muy bajos (p. ej. 1366×768): recorte adicional. */
+@media (min-width: 1024px) and (max-height: 780px) {
+  section > div {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+  .md\:min-h-\[500px\] { min-height: 300px !important; }
+  .md\:h-\[620px\] { height: 420px !important; }
+}

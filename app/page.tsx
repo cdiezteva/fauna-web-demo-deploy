@@ -5,6 +5,7 @@ import FlujoDeteccion from "@/components/FlujoDeteccion";
 import Gama from "@/components/Gama";
 import Plataforma from "@/components/Plataforma";
 import Referencias from "@/components/Referencias";
+import Descargas from "@/components/Descargas";
 import Contacto from "@/components/Contacto";
 import Footer from "@/components/Footer";
 
@@ -18,6 +19,7 @@ export default function Home() {
       <Gama />
       <Plataforma />
       <Referencias />
+      <Descargas />
       <Contacto />
       <Footer />
     </div>

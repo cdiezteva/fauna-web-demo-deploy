@@ -12,10 +12,15 @@ export const LANG_NAMES: Record<Lang, string> = {
 };
 
 export interface Dict {
-  nav: { problema: string; gama: string; plataforma: string; referencias: string; contacto: string };
+  nav: { problema: string; gama: string; plataforma: string; referencias: string; descargas: string; contacto: string };
   hero: { eyebrow: string; titleA: string; titleB: string; subtitle: string; ctaContact: string; ctaSolutions: string; trust: string };
   flujo: { title: string; sub1: string; sub2: string; steps: { title: string; sub: string }[] };
-  problema: { label: string; title: string; subtitle: string; speciesTitle: string; source: string; statLabels: string[]; species: string[] };
+  problema: {
+    label: string; title: string; subtitle: string; speciesTitle: string; source: string; statLabels: string[]; species: string[];
+    linceTag: string; linceDeaths: string; linceRoadkill: string; linceGauge: string;
+    evoTitle: string; evoDe: string; evoA: string; evoTail: string;
+    chartSpecies: string[]; sourceEvolucion: string; sourceMiteco: string;
+  };
   gama: {
     label: string; title: string; subtitle: string; ambitoWord: string; comingSoon: string;
     mapTitle: string; mapDesc: string; mapDescMobile: string; expand: string; collapse: string; mapLoading: string;
@@ -24,6 +29,7 @@ export interface Dict {
   };
   plataforma: { label: string; title: string; subtitle: string; deployLabel: string; items: { k: string; v: string }[] };
   referencias: { label: string; title: string; items: { name: string; scope: string; points?: string[] }[] };
+  descargas: { label: string; title: string; subtitle: string; dossierTitle: string; dossierDesc: string; download: string; videoTag: string; videos: string[] };
   contacto: {
     label: string; title: string; subtitle: string;
     reachOut: string;
@@ -39,7 +45,7 @@ export interface Dict {
 }
 
 const es: Dict = {
-  nav: { problema: "El problema", gama: "Las soluciones", plataforma: "Plataforma", referencias: "Referencias", contacto: "Contacto" },
+  nav: { problema: "El problema", gama: "Las soluciones", plataforma: "Plataforma", referencias: "Referencias", descargas: "Descargas", contacto: "Contacto" },
   hero: {
     eyebrow: "Detección inteligente de fauna · Señalización activa",
     titleA: "Del aviso permanente",
@@ -72,6 +78,32 @@ const es: Dict = {
       "se han duplicado en la última década",
     ],
     species: ["Jabalíes", "Corzos", "Caninos", "Otras especies"],
+    linceTag: "Lince ibérico · 2025",
+    linceDeaths: "muertes de lince detectadas en 2025",
+    linceRoadkill: "por atropello en infraestructuras viarias",
+    linceGauge: "por atropello",
+    evoTitle: "Evolución · 2015–2024",
+    evoDe: "De",
+    evoA: "a",
+    evoTail: "siniestros con fauna en redes interurbanas.",
+    chartSpecies: ["Canino", "Otros", "Corzo", "Jabalí"],
+    sourceEvolucion: "Fuente: DGT, Observatorio Nacional de Seguridad Vial — Siniestralidad con implicación de animales (2015–2024).",
+    sourceMiteco: "Fuente: MITECO, censo de lince ibérico 2025.",
+  },
+  descargas: {
+    label: "Descargas",
+    title: "Documentación y material audiovisual.",
+    subtitle: "Descargue el dossier técnico y los vídeos de producto y referencias de AVIZOR Fauna.",
+    dossierTitle: "Dossier técnico AVIZOR Fauna",
+    dossierDesc: "Presentación completa del sistema: tecnologías de detección, arquitectura, plataforma y referencias con la administración.",
+    download: "Descargar",
+    videoTag: "Vídeo",
+    videos: [
+      "Demo de detección y aviso",
+      "Señal inteligente · Sierra de Francia (JCyL)",
+      "Baliza disuasoria · animación 3D",
+      "Plataforma AVIZOR Cloud · demo",
+    ],
   },
   gama: {
     label: "Las soluciones",
@@ -179,7 +211,7 @@ const es: Dict = {
 };
 
 const en: Dict = {
-  nav: { problema: "The problem", gama: "Solutions", plataforma: "Platform", referencias: "References", contacto: "Contact" },
+  nav: { problema: "The problem", gama: "Solutions", plataforma: "Platform", referencias: "References", descargas: "Downloads", contacto: "Contact" },
   hero: {
     eyebrow: "Intelligent wildlife detection · Active signage",
     titleA: "From static warning",
@@ -212,6 +244,32 @@ const en: Dict = {
       "have doubled in the last decade",
     ],
     species: ["Wild boar", "Roe deer", "Canids", "Other species"],
+    linceTag: "Iberian lynx · 2025",
+    linceDeaths: "lynx deaths recorded in 2025",
+    linceRoadkill: "killed by vehicles on road infrastructure",
+    linceGauge: "roadkill",
+    evoTitle: "Evolution · 2015–2024",
+    evoDe: "From",
+    evoA: "to",
+    evoTail: "wildlife-related crashes on interurban networks.",
+    chartSpecies: ["Canids", "Other", "Roe deer", "Wild boar"],
+    sourceEvolucion: "Source: DGT, National Road Safety Observatory — Crashes involving animals (2015–2024).",
+    sourceMiteco: "Source: MITECO, 2025 Iberian lynx census.",
+  },
+  descargas: {
+    label: "Downloads",
+    title: "Documentation and audiovisual material.",
+    subtitle: "Download the AVIZOR Fauna technical dossier and the product and reference videos.",
+    dossierTitle: "AVIZOR Fauna technical dossier",
+    dossierDesc: "Complete overview of the system: detection technologies, architecture, platform and references with public authorities.",
+    download: "Download",
+    videoTag: "Video",
+    videos: [
+      "Detection and warning demo",
+      "Smart sign · Sierra de Francia (JCyL)",
+      "Deterrent beacon · 3D animation",
+      "AVIZOR Cloud platform · demo",
+    ],
   },
   gama: {
     label: "Solutions",
@@ -319,7 +377,7 @@ const en: Dict = {
 };
 
 const pt: Dict = {
-  nav: { problema: "O problema", gama: "As soluções", plataforma: "Plataforma", referencias: "Referências", contacto: "Contacto" },
+  nav: { problema: "O problema", gama: "As soluções", plataforma: "Plataforma", referencias: "Referências", descargas: "Transferências", contacto: "Contacto" },
   hero: {
     eyebrow: "Deteção inteligente de fauna · Sinalização ativa",
     titleA: "Do aviso permanente",
@@ -352,6 +410,32 @@ const pt: Dict = {
       "duplicaram na última década",
     ],
     species: ["Javalis", "Corços", "Canídeos", "Outras espécies"],
+    linceTag: "Lince-ibérico · 2025",
+    linceDeaths: "mortes de lince detetadas em 2025",
+    linceRoadkill: "por atropelamento em infraestruturas rodoviárias",
+    linceGauge: "por atropelamento",
+    evoTitle: "Evolução · 2015–2024",
+    evoDe: "De",
+    evoA: "a",
+    evoTail: "sinistros com fauna em redes interurbanas.",
+    chartSpecies: ["Canídeo", "Outros", "Corço", "Javali"],
+    sourceEvolucion: "Fonte: DGT, Observatório Nacional de Segurança Rodoviária — Sinistralidade com animais (2015–2024).",
+    sourceMiteco: "Fonte: MITECO, censo do lince-ibérico de 2025.",
+  },
+  descargas: {
+    label: "Transferências",
+    title: "Documentação e material audiovisual.",
+    subtitle: "Transfira o dossiê técnico e os vídeos de produto e referências da AVIZOR Fauna.",
+    dossierTitle: "Dossiê técnico AVIZOR Fauna",
+    dossierDesc: "Apresentação completa do sistema: tecnologias de deteção, arquitetura, plataforma e referências com a administração.",
+    download: "Transferir",
+    videoTag: "Vídeo",
+    videos: [
+      "Demonstração de deteção e aviso",
+      "Sinal inteligente · Sierra de Francia (JCyL)",
+      "Baliza dissuasora · animação 3D",
+      "Plataforma AVIZOR Cloud · demonstração",
+    ],
   },
   gama: {
     label: "As soluções",
@@ -459,7 +543,7 @@ const pt: Dict = {
 };
 
 const ca: Dict = {
-  nav: { problema: "El problema", gama: "Les solucions", plataforma: "Plataforma", referencias: "Referències", contacto: "Contacte" },
+  nav: { problema: "El problema", gama: "Les solucions", plataforma: "Plataforma", referencias: "Referències", descargas: "Descàrregues", contacto: "Contacte" },
   hero: {
     eyebrow: "Detecció intel·ligent de fauna · Senyalització activa",
     titleA: "De l'avís permanent",
@@ -492,6 +576,32 @@ const ca: Dict = {
       "s'han duplicat en l'última dècada",
     ],
     species: ["Senglars", "Cabirols", "Cànids", "Altres espècies"],
+    linceTag: "Linx ibèric · 2025",
+    linceDeaths: "morts de linx detectades el 2025",
+    linceRoadkill: "per atropellament en infraestructures viàries",
+    linceGauge: "per atropellament",
+    evoTitle: "Evolució · 2015–2024",
+    evoDe: "De",
+    evoA: "a",
+    evoTail: "sinistres amb fauna en xarxes interurbanes.",
+    chartSpecies: ["Cànid", "Altres", "Cabirol", "Senglar"],
+    sourceEvolucion: "Font: DGT, Observatori Nacional de Seguretat Viària — Sinistralitat amb implicació d'animals (2015–2024).",
+    sourceMiteco: "Font: MITECO, cens del linx ibèric 2025.",
+  },
+  descargas: {
+    label: "Descàrregues",
+    title: "Documentació i material audiovisual.",
+    subtitle: "Descarregueu el dossier tècnic i els vídeos de producte i referències d'AVIZOR Fauna.",
+    dossierTitle: "Dossier tècnic AVIZOR Fauna",
+    dossierDesc: "Presentació completa del sistema: tecnologies de detecció, arquitectura, plataforma i referències amb l'administració.",
+    download: "Descarregar",
+    videoTag: "Vídeo",
+    videos: [
+      "Demostració de detecció i avís",
+      "Senyal intel·ligent · Sierra de Francia (JCyL)",
+      "Balisa dissuasòria · animació 3D",
+      "Plataforma AVIZOR Cloud · demostració",
+    ],
   },
   gama: {
     label: "Les solucions",

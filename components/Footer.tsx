@@ -36,6 +36,7 @@ export default function Footer() {
               <a href="#gama" className="text-sm no-underline text-[#aab6c9] hover:text-white">{t.nav.gama}</a>
               <a href="#plataforma" className="text-sm no-underline text-[#aab6c9] hover:text-white">{t.nav.plataforma}</a>
               <a href="#referencias" className="text-sm no-underline text-[#aab6c9] hover:text-white">{t.nav.referencias}</a>
+              <a href="#descargas" className="text-sm no-underline text-[#aab6c9] hover:text-white">{t.nav.descargas}</a>
             </div>
             <div className="flex flex-col gap-3">
               <span className="font-mono text-[11px] tracking-[.1em] uppercase text-[#5c6a82]">

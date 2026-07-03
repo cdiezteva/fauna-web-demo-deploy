@@ -21,7 +21,7 @@ export default function Contacto() {
       <div className="max-w-[1220px] mx-auto px-5 md:px-11 py-16 md:py-[120px]">
         <div className="flex gap-10 md:gap-16 flex-wrap items-start md:items-stretch">
           <Reveal className="flex-[1_1_360px] min-w-[280px]">
-            <SectionLabel num="05" label={c.label} />
+            <SectionLabel num="06" label={c.label} />
             <h2 className="font-display font-bold text-[26px] md:text-[42px] leading-[1.06] tracking-[-.02em] mb-5 balance">
               {c.title}
             </h2>
