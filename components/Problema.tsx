@@ -237,7 +237,15 @@ export default function Problema() {
 
           <Reveal delay={220} className="h-full">
             <div className="group/card border border-line rounded-xl p-6 md:p-8 h-full transition-all duration-300 hover:border-brand/30 hover:shadow-[0_10px_30px_-12px_rgba(59,102,194,.2)] motion-safe:hover:-translate-y-1">
-              <div className="font-mono text-[11px] tracking-[.14em] uppercase text-[#8a9291] mb-6">
+              <div className="flex items-center gap-2 font-mono text-[11px] tracking-[.14em] uppercase text-[#8a9291] mb-6">
+                <Image
+                  src="/images/icons/lince-icono.png"
+                  alt=""
+                  aria-hidden
+                  width={64}
+                  height={64}
+                  className="flex-none w-9 h-9 object-contain"
+                />
                 {t.problema.linceTag}
               </div>
               <div className="flex items-center gap-6 md:gap-8 flex-wrap">

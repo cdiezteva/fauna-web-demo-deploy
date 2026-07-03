@@ -134,12 +134,12 @@ export const gama: GamaItem[] = [
     ambito: "Tramos largos y abiertos",
     tint: "#1E2A3D",
     bg: "/images/gama-fo.jpg",
-    tagline: "Detección lineal por C-OTDR",
-    desc: "Una fibra óptica enterrada al borde de la vía detecta las alteraciones del animal y localiza el punto exacto de la intrusión, a lo largo de kilómetros de trazado y sin puntos ciegos. Ideal para tramos largos y abiertos, incluidos los TEFIVA.",
+    tagline: "Detección continua a lo largo de toda la vía",
+    desc: "Una fibra óptica enterrada al borde de la vía detecta el paso del animal y localiza el punto exacto en el que se encuentra, a lo largo de kilómetros de carretera y sin puntos ciegos. Ideal para tramos largos y abiertos.",
     specs: [
-      "Hasta 80 km por sensor · 1.440 secciones",
-      "Detección hasta 20 m antes de la fibra; inmune al clima",
-      "Zanja de 30–40 cm, sin barreras ni acometida; sin impacto visual",
+      "Cubre grandes distancias con un único equipo",
+      "Detecta al animal antes de que llegue a la calzada, con cualquier condición climática",
+      "Se instala bajo tierra: no se ve y no requiere obra en superficie",
     ],
     refs: [],
     image: "/images/carretera-fo.jpg",
@@ -152,12 +152,12 @@ export const gama: GamaItem[] = [
     ambito: "Enlaces, accesos y puntos discretos",
     tint: "#1C2836",
     bg: "", // placeholder: pendiente de sustituir por imagen definitiva
-    tagline: "Cámara IR + IVS",
-    desc: "Cámara con analítica de vídeo embebida y foco IR de 850 nm (IP68/IK10) que distingue animal, vehículo o persona. Pensada para enlaces de autovía/autopista, accesos y puntos concretos delimitados.",
+    tagline: "Cámara con visión nocturna",
+    desc: "Una cámara inteligente distingue automáticamente entre animales, vehículos y personas, incluso de noche. Pensada para enlaces de autovía o autopista, accesos y puntos muy concretos.",
     specs: [
-      "Fiabilidad > 96%; secciones de hasta 30 m por equipo",
-      "Detección nocturna por vídeo con IR (no térmica)",
-      "< 18 W, autonomía solar; router 4G/5G de doble SIM",
+      "Identifica al animal con una fiabilidad muy alta",
+      "Funciona igual de bien de día que de noche",
+      "Autónoma con energía solar, sin necesidad de obra eléctrica",
     ],
     refs: [
       "JCyL · Somacyl — Sierra de Francia",
@@ -177,12 +177,12 @@ export const gama: GamaItem[] = [
     ambito: "Perímetros y pasos recurrentes de fauna",
     tint: "#202C42",
     bg: "", // placeholder: pendiente de sustituir por imagen definitiva
-    tagline: "Corte simultáneo de 4 haces IR",
-    desc: "Detectores en ambos márgenes forman un perímetro virtual continuo por corte de cuatro haces láser infrarrojos. Escenario idóneo: perímetros de tramos abiertos y puntos negros / TEFIVA con mínima falsa alarma.",
+    tagline: "Barrera invisible de luz infrarroja",
+    desc: "Detectores instalados a ambos lados de la vía forman una barrera invisible que se activa cuando un animal la cruza. Ideal para vallar virtualmente tramos abiertos y puntos con muchos atropellos, con muy pocas falsas alarmas.",
     specs: [
-      "Hasta 200 m por detector; descarta vegetación, aves y pequeño porte",
-      "Latencia < 1 s (LoRaWAN clase C) + 4G/LTE",
-      "Autónomo, IP66 y API de integración con la DGT",
+      "Cubre largos tramos y distingue a los animales de la vegetación o las aves",
+      "Avisa de forma prácticamente instantánea",
+      "Resistente a la intemperie y conectado con los sistemas de tráfico",
     ],
     refs: ["Junta de Castilla-La Mancha — sistema de barreras láser"],
     refTags: [{ label: "JCCM", ref: "ref-jcyl" }],
@@ -196,12 +196,12 @@ export const gama: GamaItem[] = [
     ambito: "Especies radiomarcadas (lince ibérico)",
     tint: "#232C46",
     bg: "/images/gama-li.jpg",
-    tagline: "Lectura del collar emisor",
-    desc: "Detecta especies radiomarcadas captando el pulso VHF de su collar mediante antena omnidireccional, filtro pasa-banda y amplificador de bajo ruido. Protección específica de especies amenazadas, en especial el lince ibérico.",
+    tagline: "Detecta el collar del animal",
+    desc: "Detecta a los animales que llevan un collar de seguimiento, como ocurre con muchos ejemplares de lince ibérico. Protección específica para especies amenazadas.",
     specs: [
-      "148–173 MHz; reacción < 150 ms",
-      "Matriz LED ≥ 8.000 cd, visible a 300 m",
-      "Semanas de autonomía (panel 10 W + LiFePO₄)",
+      "Reacciona en el momento en que el animal se acerca",
+      "Señal muy visible incluso a distancia",
+      "Semanas de autonomía gracias a su panel solar",
     ],
     refs: ["MITMA / Junta de Andalucía — conservación del lince ibérico"],
     refTags: [{ label: "MITMA", ref: "ref-lince" }],
@@ -216,11 +216,11 @@ export const gama: GamaItem[] = [
     tint: "#212A40",
     bg: "/images/gama-b.jpg",
     tagline: "Detecta y disuade",
-    desc: "Baliza modular y autónoma, con forma de hito de arista, que detecta y disuade a la fauna en la calzada al tiempo que advierte al conductor. Pensada para disuasión activa y detección puntual en márgenes de carretera.",
+    desc: "Baliza modular y autónoma que detecta y disuade a la fauna de cruzar la calzada, al tiempo que advierte al conductor. Pensada para disuasión activa y detección puntual en márgenes de carretera.",
     specs: [
-      "Doble disuasión: LED + ultrasonidos (8–41 kHz, 135 dB)",
-      "Radar Doppler (25 m) y/o LIDAR (hasta 150 m)",
-      "Identificador único: enciende solo balizas próximas · PET (OC 06/2023)",
+      "Combina luz y sonido para disuadir al animal",
+      "Detecta al animal con antelación suficiente para reaccionar",
+      "Solo se activan las balizas más cercanas al peligro real",
     ],
     refs: ["DGT — presentación en jornada técnica"],
     refTags: [{ label: "DGT", ref: "ref-dgt" }],
@@ -234,15 +234,6 @@ export const selectionGuide = [
   { code: "Fauna-L", tech: "Barrera láser multihaz", scenario: "Perímetro de tramos / TEFIVA", data: "200 m/detector · < 1 s" },
   { code: "Fauna-LI", tech: "Radiofrecuencia VHF", scenario: "Especies radiomarcadas (lince)", data: "148–173 MHz · < 150 ms" },
   { code: "Fauna-B", tech: "Baliza radar Doppler + LIDAR", scenario: "Disuasión activa y detección", data: "Radar 25 m / LIDAR 150 m · solar" },
-];
-
-export const platform = [
-  { k: "DATOS E HISTÓRICOS", v: "Detecciones y encendidos por p.k.; exportación CSV/XML." },
-  { k: "CONTROL DE SEÑALIZACIÓN", v: "Brillo y tiempos de encendido en remoto." },
-  { k: "MONITORIZACIÓN", v: "Temperatura, humedad, gateways y señal radio." },
-  { k: "ENERGÍA", v: "Estado y carga de baterías solares." },
-  { k: "MANTENIMIENTO", v: "Averías en tiempo real y actualizaciones de firmware OTA." },
-  { k: "SEGURIDAD (ENS)", v: "Perfiles de usuario; plataforma disponible 24×7." },
 ];
 
 export const platformDeployment = {
@@ -298,7 +289,7 @@ export const references = [
   {
     id: "ref-lince",
     name: "MITMA · Junta de Andalucía",
-    scope: "Detección temprana del lince ibérico mediante radiofrecuencia VHF del collar, con activación automática de la señalización.",
+    scope: "Detección temprana del lince ibérico gracias al collar de seguimiento que llevan algunos ejemplares, con activación automática de la señalización.",
     sol: "Fauna-LI",
     target: "sol-li",
     image: "/images/lince-iberico.jpg",
@@ -306,7 +297,7 @@ export const references = [
   {
     id: "ref-somacyl",
     name: "JCyL · Somacyl — Sierra de Francia",
-    scope: "Señal inteligente con analítica de vídeo: señal autónoma solar con cámara; alarmas a centro de control, SMS o correo.",
+    scope: "Señal inteligente con cámara: detecta la fauna y avisa al centro de control, por SMS o por correo.",
     sol: "Fauna-E",
     target: "sol-e",
     image: "/images/somacyl-instalacion.jpg",
@@ -322,7 +313,7 @@ export const references = [
   {
     id: "ref-a4a44",
     name: "MITMA · A-4 y A-44 (Jaén y Granada)",
-    scope: "57 cámaras de vídeo e infrarrojas desplegadas en ≈14 enlaces; portal operativo avizor-fauna.tecnologiasviales.com.",
+    scope: "57 cámaras de vídeo e infrarrojas desplegadas en unos 14 enlaces de la autovía, con plataforma propia de gestión y control.",
     sol: "Fauna-E",
     target: "sol-e",
     image: "/images/map-jaen.jpeg",
@@ -330,7 +321,7 @@ export const references = [
   {
     id: "ref-dgt",
     name: "DGT",
-    scope: "Dirección General de Tráfico — presentación de la baliza LIDAR de detección y aviso de fauna, preparada para DGT 3.0.",
+    scope: "Dirección General de Tráfico — presentación de la baliza de detección y aviso de fauna, preparada para conectarse con los sistemas de tráfico del futuro.",
     sol: "Fauna-B",
     target: "sol-b",
     image: "/images/baliza-stand-dgt.jpg",

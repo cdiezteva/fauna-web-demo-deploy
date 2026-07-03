@@ -74,21 +74,33 @@ export default function Contacto() {
                   e.preventDefault();
                   const form = e.currentTarget;
                   const data = new FormData(form);
-                  const payload = {
-                    email: String(data.get("email") ?? ""),
-                    name: String(data.get("name") ?? ""),
-                    party: String(data.get("party") ?? ""),
-                    interest: String(data.get("interest") ?? ""),
-                  };
+                  const email = String(data.get("email") ?? "").trim();
+                  const name = String(data.get("name") ?? "").trim();
+                  const party = String(data.get("party") ?? "").trim();
+                  const interest = String(data.get("interest") ?? "").trim();
+
                   setError(false);
                   setSending(true);
                   try {
-                    const res = await fetch("/api/contacto", {
+                    // Web3Forms se llama directamente desde el navegador: su
+                    // access key es pública, y su API solo acepta peticiones
+                    // como FormData (como un <form> normal) — un cuerpo JSON
+                    // dispara un preflight CORS que Web3Forms no responde.
+                    const fd = new FormData();
+                    fd.append("access_key", process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ?? "");
+                    fd.append("subject", `${name} requiere de más información a través de la web de AVIZOR Fauna`);
+                    fd.append("from_name", "AVIZOR Fauna · Formulario web");
+                    fd.append("email", email);
+                    fd.append("Nombre", name);
+                    fd.append("Tipo de interesado", party);
+                    fd.append("Información solicitada y finalidad", interest);
+
+                    const res = await fetch("https://api.web3forms.com/submit", {
                       method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify(payload),
+                      body: fd,
                     });
-                    if (!res.ok) throw new Error("send_failed");
+                    const result = await res.json().catch(() => ({}));
+                    if (!res.ok || !result.success) throw new Error("send_failed");
                     setSent(true);
                   } catch {
                     setError(true);
