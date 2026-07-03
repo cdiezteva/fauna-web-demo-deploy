@@ -330,7 +330,7 @@ export const references = [
   {
     id: "ref-dgt",
     name: "DGT",
-    scope: "Dirección General de Tráfico — presentación de la baliza LIDAR de detección y aviso de fauna, conectada a DGT 3.0.",
+    scope: "Dirección General de Tráfico — presentación de la baliza LIDAR de detección y aviso de fauna, preparada para DGT 3.0.",
     sol: "Fauna-B",
     target: "sol-b",
     image: "/images/baliza-stand-dgt.jpg",

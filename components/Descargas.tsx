@@ -17,7 +17,11 @@ export default function Descargas() {
           {d.title}
         </h2>
         <p className="text-base leading-relaxed text-[#4a5257] max-w-[560px] mb-12">
-          {d.subtitle}
+          {d.subtitle} {d.contactPrompt}
+          <a href="#contacto" className="text-brand font-medium no-underline hover:underline">
+            {d.contactLink}
+          </a>
+          .
         </p>
 
         {/* Dos columnas de filas finas y rectangulares: dossier PDF + vídeos.

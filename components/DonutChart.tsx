@@ -4,6 +4,15 @@ import { useEffect, useRef, useState } from "react";
 
 type Segment = { pct: number; color: string };
 
+/** Oscurece un color hex multiplicando sus canales (f < 1 = más oscuro). */
+function shade(hex: string, f: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.min(255, Math.round(((n >> 16) & 255) * f));
+  const g = Math.min(255, Math.round(((n >> 8) & 255) * f));
+  const b = Math.min(255, Math.round((n & 255) * f));
+  return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
+}
+
 /**
  * Animated donut: the colored segments are drawn statically and revealed in a
  * single pass by an arc-shaped mask that sweeps the whole ring once.
@@ -101,7 +110,12 @@ export default function DonutChart({
           .sort((a, b) => (a.i === activeIndex ? 1 : b.i === activeIndex ? -1 : 0))
           .map((s) => {
             const isActive = s.i === activeIndex;
-            const isDimmed = activeIndex != null && !isActive;
+            const hovering = activeIndex != null;
+            const isDimmed = hovering && !isActive;
+            // Al pasar el ratón oscurecemos los tonos para que los azules más
+            // claros se distingan con nitidez; el resaltado se apoya en el grosor
+            // y en una atenuación suave (no en un desvanecido que los borraría).
+            const stroke = hovering ? shade(s.color, 0.68) : s.color;
             return (
               <circle
                 key={s.i}
@@ -109,13 +123,13 @@ export default function DonutChart({
                 cy={c}
                 r={r}
                 fill="none"
-                stroke={s.color}
+                stroke={stroke}
                 transform={`rotate(${s.startDeg} ${c} ${c})`}
                 strokeDasharray={`${s.len} ${C}`}
                 style={{
                   strokeWidth: isActive ? thickness + 6 : thickness,
-                  opacity: isDimmed ? 0.35 : 1,
-                  transition: "stroke-width .3s cubic-bezier(.2,.7,.2,1), opacity .3s ease",
+                  opacity: isDimmed ? 0.7 : 1,
+                  transition: "stroke-width .3s cubic-bezier(.2,.7,.2,1), opacity .3s ease, stroke .3s ease",
                 }}
               />
             );

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Serra de Collserola</title>
+<title>AVIZOR Fauna — Mapa interactivo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -29,43 +29,140 @@ html, body, #map { width:100%; height:100%; background:#0f1514; }
   max-height:calc(100vh - 24px); overflow-y:auto;
 }
 #ui::-webkit-scrollbar { width:3px; }
-#ui::-webkit-scrollbar-thumb { background:#23302d; }
+#ui::-webkit-scrollbar-thumb { background:#c7ced2; }
 
+/* Paleta de la web principal: paper #f6f7f7 · ink #16191b · brand #3B66C2
+   mist #eef1f0 · line #e2e5e6 · texto secundario #6b7378 */
 .panel {
-  background:rgba(15,21,20,0.93); border:1px solid rgba(255,255,255,.12);
+  background:rgba(246,247,247,0.96); border:1px solid #e2e5e6;
   border-radius:8px; padding:9px 12px;
+  box-shadow:0 2px 10px rgba(22,25,27,.08);
 }
 .panel h1 {
-  color:#A9BFCF; font-size:12px; font-weight:400;
+  color:#16191b; font-size:12px; font-weight:600;
   text-transform:uppercase; letter-spacing:3px;
 }
-.sub { color:#5f6b69; font-size:9px; letter-spacing:1px; margin-top:2px; }
+.sub { color:#6b7378; font-size:9px; letter-spacing:1px; margin-top:2px; }
 .glabel {
-  color:#5f6b69; font-size:9px; letter-spacing:2px;
+  color:#6b7378; font-size:9px; letter-spacing:2px;
   margin-bottom:5px; text-transform:uppercase;
 }
 .bcol { display:flex; flex-direction:column; gap:3px; }
 
+/* Secciones plegables (drop-downs) */
+.sec .sechead {
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  cursor:pointer; user-select:none; margin-bottom:0;
+}
+.sec.open .sechead { margin-bottom:5px; }
+.sec .caret { font-size:8px; color:#6b7378; transition:transform .22s ease; transform:rotate(-90deg); }
+.sec.open .caret { transform:rotate(0deg); }
+/* Despliegue animado: altura + opacidad + ligero deslizamiento */
+.sec .bcol {
+  overflow:hidden; max-height:0; opacity:0; transform:translateY(-4px);
+  transition:max-height .28s ease, opacity .22s ease, transform .22s ease;
+}
+.sec.open .bcol { max-height:220px; opacity:1; transform:translateY(0); }
+.sec .sechead:hover .caret { color:#3B66C2; }
+
 button {
-  background:rgba(15,21,20,0.9); border:1px solid rgba(255,255,255,.12); border-left-width:3px;
-  color:#c3ccc9; font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:10px;
+  background:#ffffff; border:1px solid #e2e5e6; border-left-width:3px;
+  color:#4a5257; font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:10px;
   letter-spacing:0.5px; padding:5px 9px; cursor:pointer; border-radius:6px;
   text-align:left; white-space:nowrap; display:flex; align-items:center; gap:7px;
   transition:background 0.15s;
 }
-button:hover { background:rgba(255,255,255,.06); }
-button.on { background:rgba(59,102,194,.22); color:#eaf0fa; }
+button:hover { background:#eef1f0; }
+button.on { background:#EAF0FA; color:#2C4EA0; }
 
 .sw { width:9px; height:9px; border-radius:1px; flex-shrink:0; }
 .maplibregl-ctrl-attrib { font-size:9px !important; }
+
+/* ── Leyenda (siempre visible) ─────────────────────────────────────────── */
+#legend {
+  position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:10;
+  max-width:calc(100% - 24px);
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  background:rgba(246,247,247,0.72); border:1px solid rgba(226,229,230,.7);
+  backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
+  border-radius:8px; padding:7px 16px;
+  box-shadow:0 2px 10px rgba(22,25,27,.08);
+}
+#legend-rows {
+  display:flex; flex-wrap:nowrap; justify-content:center;
+  column-gap:20px; overflow-x:auto;
+}
+#legend .row {
+  display:flex; align-items:center; gap:8px;
+  color:#4a5257; font-size:10px; letter-spacing:0.5px; padding:2px 0;
+  white-space:nowrap;
+}
+#legend .dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; border:1px solid rgba(22,25,27,.25); }
+#legend .name { color:#16191b; font-weight:600; }
+#legend .what { color:#6b7378; font-size:9px; }
+
+/* ── Popup multimedia ──────────────────────────────────────────────────── */
+.media-popup .maplibregl-popup-content {
+  background:rgba(15,21,20,0.96); color:#c3ccc9;
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  border:1px solid rgba(255,255,255,.18); border-radius:10px;
+  padding:0; width:240px; overflow:hidden;
+  box-shadow:0 8px 28px rgba(0,0,0,.55);
+}
+.media-popup .maplibregl-popup-tip { border-top-color:rgba(15,21,20,0.96); border-bottom-color:rgba(15,21,20,0.96); }
+.media-popup.maplibregl-popup-anchor-left  .maplibregl-popup-tip { border-right-color:rgba(15,21,20,0.96); }
+.media-popup.maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color:rgba(15,21,20,0.96); }
+.media-popup .maplibregl-popup-close-button {
+  color:#eaf0fa; font-size:16px; right:6px; top:4px; z-index:3;
+  background:rgba(15,21,20,.6); border:none; padding:0; justify-content:center;
+  border-radius:50%; width:20px; height:20px; line-height:18px;
+}
+.mp-tag {
+  display:flex; align-items:center; gap:6px;
+  font-size:9px; letter-spacing:2px; text-transform:uppercase;
+  padding:7px 10px 5px;
+}
+.mp-tag .dot { width:8px; height:8px; border-radius:50%; }
+.mp-media { position:relative; }
+.mp-media img, .mp-media video { display:block; width:100%; height:130px; object-fit:cover; background:#000; }
+.mp-slide { display:none; }
+.mp-slide.on { display:block; }
+.mp-nav {
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; border-radius:50%; border:none; padding:0;
+  background:rgba(15,21,20,.72); color:#eaf0fa; font-size:13px; line-height:22px;
+  text-align:center; justify-content:center; cursor:pointer; z-index:2;
+}
+.mp-prev { left:6px; } .mp-next { right:6px; }
+.mp-nav:hover { background:rgba(59,102,194,.85); }
+.mp-count {
+  position:absolute; bottom:5px; right:7px; z-index:2;
+  font-size:8.5px; letter-spacing:1px; color:#eaf0fa;
+  background:rgba(15,21,20,.72); border-radius:8px; padding:1px 6px;
+}
+.mp-dots { position:absolute; bottom:6px; left:0; right:0; display:flex; justify-content:center; gap:4px; z-index:1; }
+.mp-dots span { width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,.4); }
+.mp-dots span.on { background:#eaf0fa; }
+.mp-title { color:#eaf0fa; font-size:11px; font-weight:600; padding:8px 10px 2px; }
+.mp-desc  { color:#8a9693; font-size:9.5px; line-height:1.5; padding:0 10px 10px; }
+
+/* Popups fijados: arrastrables, con línea guía hacia su punto en el mapa */
+.media-popup.pinned .maplibregl-popup-content { cursor:grab; }
+.media-popup.pinned.dragging .maplibregl-popup-content { cursor:grabbing; }
+#leaders {
+  position:absolute; inset:0; width:100%; height:100%;
+  pointer-events:none; z-index:60;
+}
+#leaders line   { stroke-dasharray:4 3; stroke-width:1.5; opacity:.9; }
+#leaders circle { stroke:#ffffff; stroke-width:1.5; opacity:.95; }
 </style>
 </head>
 <body>
 
 <div id="loader">
-  <div>SERRA DE COLLSEROLA</div>
+  <div>AVIZOR FAUNA</div>
   <div class="bar"><div class="fill" id="prog" style="width:5%"></div></div>
-  <div id="lmsg" data-i18n="loading">Carregant...</div>
+  <div id="lmsg" data-i18n="loading">Cargando…</div>
 </div>
 
 <div id="map"></div>
@@ -73,61 +170,69 @@ button.on { background:rgba(59,102,194,.22); color:#eaf0fa; }
 <div id="ui" style="display:none">
 
   <div class="panel">
-    <h1>Serra de Collserola</h1>
-    <div class="sub">MapLibre GL &nbsp;|&nbsp; OpenFreeMap &nbsp;|&nbsp; SRTM terrain</div>
+    <h1>AVIZOR Fauna</h1>
   </div>
 
-  <div class="panel">
-    <div class="glabel" data-i18n="style">Estil</div>
+  <div class="panel sec">
+    <div class="glabel sechead"><span data-i18n="style">Estilo</span><span class="caret">▾</span></div>
     <div class="bcol">
-      <button id="sty-topo"  data-i18n="topo"  style="border-left-color:#3B66C2" class="on">Topografic</button>
-      <button id="sty-roads" data-i18n="roads" style="border-left-color:#455057"            >Carreteres</button>
+      <button id="sty-topo"  data-i18n="topo"  style="border-left-color:#3B66C2" class="on">Topográfico</button>
+      <button id="sty-roads" data-i18n="roads" style="border-left-color:#cfd6d9"            >Carreteras</button>
     </div>
   </div>
 
-  <div class="panel">
-    <div class="glabel" data-i18n="view">Vista</div>
+  <div class="panel sec open">
+    <div class="glabel sechead"><span data-i18n="view">Vista</span><span class="caret">▾</span></div>
+    <div class="bcol" id="view-btns"></div>
+  </div>
+
+  <div class="panel sec">
+    <div class="glabel sechead"><span data-i18n="terrain">Relieve</span><span class="caret">▾</span></div>
     <div class="bcol">
-      <button data-fly="41.435,2.094,11.8,55,-10"  data-i18n="v_overview" style="border-left-color:#455057">Vista general</button>
-      <button data-fly="41.4228,2.1194,14,60,-20"  style="border-left-color:#455057">Tibidabo</button>
-      <button data-fly="41.435,2.094,12.5,50,15"   data-i18n="v_ridge" style="border-left-color:#455057">Cresta central</button>
-      <button data-fly="41.406,2.102,13,55,-10"    style="border-left-color:#455057">Vallvidrera</button>
-      <button data-fly="41.445,2.051,12.5,45,30"   style="border-left-color:#455057">Sant Cugat</button>
+      <button id="ter-15" data-i18n="t_exag" style="border-left-color:#3B66C2" class="on">Exagerado x1.5</button>
+      <button id="ter-10" data-i18n="t_real" style="border-left-color:#cfd6d9"            >Real x1.0</button>
+      <button id="ter-0"  data-i18n="t_flat" style="border-left-color:#cfd6d9"            >Plano</button>
     </div>
   </div>
 
-  <div class="panel">
-    <div class="glabel" data-i18n="layers">Capes de dades</div>
-    <div class="bcol" id="data-btns"></div>
-  </div>
-
-  <div class="panel">
-    <div class="glabel" data-i18n="terrain">Terreny</div>
+  <div class="panel sec">
+    <div class="glabel sechead"><span data-i18n="visibility">Visibilidad</span><span class="caret">▾</span></div>
     <div class="bcol">
-      <button id="ter-15" data-i18n="t_exag" style="border-left-color:#3B66C2" class="on">Exagerat x1.5</button>
-      <button id="ter-10" data-i18n="t_real" style="border-left-color:#455057"            >Real x1.0</button>
-      <button id="ter-0"  data-i18n="t_flat" style="border-left-color:#455057"            >Pla</button>
-    </div>
-  </div>
-
-  <div class="panel">
-    <div class="glabel" data-i18n="visibility">Visibilitat</div>
-    <div class="bcol">
-      <button id="btn-poi" data-i18n="poi"    style="border-left-color:#3B66C2" class="on">Icones / POI</button>
-      <button id="btn-lbl" data-i18n="labels" style="border-left-color:#3B66C2" class="on">Etiquetes</button>
+      <button id="btn-poi" data-i18n="poi"    style="border-left-color:#3B66C2" class="on">Iconos / POI</button>
+      <button id="btn-lbl" data-i18n="labels" style="border-left-color:#3B66C2" class="on">Etiquetas</button>
     </div>
   </div>
 
 </div>
 
+<div id="legend" style="display:none">
+  <div id="legend-rows"></div>
+</div>
+
 <script>
-// ── I18N (menú del mapa) ──────────────────────────────────────────────────────
+// ── I18N ──────────────────────────────────────────────────────────────────────
 var MAP_LANG = (new URLSearchParams(location.search).get('lang') || 'es');
 var I18N = {
-  es: { style:'Estilo', topo:'Topográfico', roads:'Carreteras', view:'Vista', v_overview:'Vista general', v_ridge:'Cresta central', layers:'Capas de datos', terrain:'Relieve', t_exag:'Exagerado x1.5', t_real:'Real x1.0', t_flat:'Plano', visibility:'Visibilidad', poi:'Iconos / POI', labels:'Etiquetas', loading:'Cargando…', done:'Listo', l_lib:'Cargando MapLibre…', l_tiles:'Cargando teselas…', l_cfg:'Configurando…' },
-  en: { style:'Style', topo:'Topographic', roads:'Roads', view:'View', v_overview:'Overview', v_ridge:'Central ridge', layers:'Data layers', terrain:'Terrain', t_exag:'Exaggerated x1.5', t_real:'Real x1.0', t_flat:'Flat', visibility:'Visibility', poi:'Icons / POI', labels:'Labels', loading:'Loading…', done:'Ready', l_lib:'Loading MapLibre…', l_tiles:'Loading tiles…', l_cfg:'Configuring…' },
-  pt: { style:'Estilo', topo:'Topográfico', roads:'Estradas', view:'Vista', v_overview:'Vista geral', v_ridge:'Crista central', layers:'Camadas de dados', terrain:'Relevo', t_exag:'Exagerado x1.5', t_real:'Real x1.0', t_flat:'Plano', visibility:'Visibilidade', poi:'Ícones / POI', labels:'Etiquetas', loading:'A carregar…', done:'Pronto', l_lib:'A carregar MapLibre…', l_tiles:'A carregar telas…', l_cfg:'A configurar…' },
-  ca: { style:'Estil', topo:'Topogràfic', roads:'Carreteres', view:'Vista', v_overview:'Vista general', v_ridge:'Cresta central', layers:'Capes de dades', terrain:'Relleu', t_exag:'Exagerat x1.5', t_real:'Real x1.0', t_flat:'Pla', visibility:'Visibilitat', poi:'Icones / POI', labels:'Etiquetes', loading:'Carregant…', done:'Llest', l_lib:'Carregant MapLibre…', l_tiles:'Carregant tessel·les…', l_cfg:'Configurant…' }
+  es: { style:'Estilo', topo:'Topográfico', roads:'Carreteras', view:'Vista',
+        v_general:'Sierra de Collserola', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
+        legend:'Leyenda', terrain:'Relieve', t_exag:'Exagerado x1.5', t_real:'Real x1.0', t_flat:'Plano',
+        visibility:'Visibilidad', poi:'Iconos / POI', labels:'Etiquetas',
+        loading:'Cargando…', done:'Listo', l_lib:'Cargando MapLibre…', l_tiles:'Cargando teselas…', l_cfg:'Configurando…' },
+  en: { style:'Style', topo:'Topographic', roads:'Roads', view:'View',
+        v_general:'Sierra de Collserola', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
+        legend:'Legend', terrain:'Terrain', t_exag:'Exaggerated x1.5', t_real:'Real x1.0', t_flat:'Flat',
+        visibility:'Visibility', poi:'Icons / POI', labels:'Labels',
+        loading:'Loading…', done:'Ready', l_lib:'Loading MapLibre…', l_tiles:'Loading tiles…', l_cfg:'Configuring…' },
+  pt: { style:'Estilo', topo:'Topográfico', roads:'Estradas', view:'Vista',
+        v_general:'Sierra de Collserola', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
+        legend:'Legenda', terrain:'Relevo', t_exag:'Exagerado x1.5', t_real:'Real x1.0', t_flat:'Plano',
+        visibility:'Visibilidade', poi:'Ícones / POI', labels:'Etiquetas',
+        loading:'A carregar…', done:'Pronto', l_lib:'A carregar MapLibre…', l_tiles:'A carregar telas…', l_cfg:'A configurar…' },
+  ca: { style:'Estil', topo:'Topogràfic', roads:'Carreteres', view:'Vista',
+        v_general:'Serra de Collserola', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
+        legend:'Llegenda', terrain:'Relleu', t_exag:'Exagerat x1.5', t_real:'Real x1.0', t_flat:'Pla',
+        visibility:'Visibilitat', poi:'Icones / POI', labels:'Etiquetes',
+        loading:'Carregant…', done:'Llest', l_lib:'Carregant MapLibre…', l_tiles:'Carregant tessel·les…', l_cfg:'Configurant…' }
 };
 var L = I18N[MAP_LANG] || I18N.es;
 function applyMapI18n(){
@@ -137,34 +242,19 @@ function applyMapI18n(){
   });
 }
 applyMapI18n();
+</script>
 
-// ── DADES ─────────────────────────────────────────────────────────────────────
-var DATA_LAYERS = [
-  {
-    id:'fauna-fo', label:'Fauna-FO', color:'#ff1a1a', width:6,
-    fly:[2.09,41.42,12.5,50,0],
-    data:{"type":"FeatureCollection","features":[
-      {"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[2.1218415,41.4282096],[2.1216507,41.4280906],[2.1215494,41.4280232],[2.1214552,41.427942],[2.1212905,41.4277912],[2.1211929,41.4276836],[2.1210574,41.427548],[2.1209099,41.427427],[2.1207504,41.4273339],[2.1205032,41.4272348],[2.120341,41.4271969],[2.1201099,41.4271617],[2.1198974,41.4271494],[2.1196811,41.4271656],[2.1193738,41.4272203],[2.1182419,41.4274757],[2.1172967,41.4276797],[2.1171138,41.4277743],[2.1169519,41.4278887],[2.1168128,41.4280425],[2.1167361,41.4281754],[2.1166802,41.4283294],[2.1165578,41.428713],[2.1164967,41.4288509],[2.1163577,41.4289854],[2.1161939,41.4290709],[2.1160311,41.4291329],[2.1158628,41.4291641],[2.1146176,41.4293129],[2.1143928,41.42941],[2.1142386,41.4295486],[2.1141503,41.429676],[2.114112,41.4298911],[2.1141033,41.4301771],[2.1140371,41.4303012],[2.1139185,41.4304102],[2.1137528,41.4304882],[2.1135881,41.4305053],[2.113408,41.4304796],[2.1132711,41.4304332],[2.1123363,41.4299958],[2.1121941,41.4299635],[2.1120193,41.4299321],[2.1107943,41.4299108],[2.1105995,41.4299497],[2.1104419,41.4300493],[2.1103216,41.4301639],[2.1099185,41.4307189],[2.1096538,41.4310181],[2.1093238,41.431349],[2.1092339,41.431513],[2.1090915,41.4318623],[2.1090123,41.4319902],[2.1086086,41.4323772],[2.1081668,41.4330615],[2.1078922,41.433517],[2.1078244,41.433792],[2.1077463,41.4345775],[2.1077112,41.4346758],[2.1076274,41.4347866],[2.1073592,41.4349412],[2.1064567,41.4354096],[2.1063567,41.4354797],[2.1052986,41.436602],[2.1052182,41.436824],[2.1052546,41.4370781],[2.1053551,41.4375242],[2.1053228,41.4376761],[2.1052327,41.4378058],[2.1050782,41.4379569],[2.1048289,41.4380959],[2.1045923,41.438182],[2.104249,41.4383322],[2.1040709,41.4384535],[2.1039258,41.4385864],[2.1038273,41.4387328],[2.1037242,41.4388565],[2.1035759,41.4389427],[2.1033945,41.4389764],[2.1028922,41.4389889],[2.1017079,41.4390322],[2.101279,41.4391365],[2.1007466,41.4393135],[2.1003521,41.4395526],[2.1000469,41.4398615],[2.0998899,41.4401249],[2.0991226,41.4415376],[2.0989166,41.4417272],[2.0981791,41.442267],[2.097977,41.442443],[2.0975302,41.4431356],[2.0975129,41.4433948],[2.0979602,41.4439739],[2.0980192,41.4441549],[2.0979723,41.4444271],[2.0978209,41.444636],[2.097482,41.4448352],[2.0973563,41.4449483],[2.0970581,41.445459],[2.0969235,41.4455633],[2.0966968,41.4456411],[2.0963545,41.4457069],[2.0960588,41.445777],[2.0959329,41.4459356],[2.0957351,41.4463553],[2.0956542,41.4464605],[2.0951607,41.446644],[2.0945227,41.4468921],[2.0941846,41.4472002],[2.0940374,41.447507],[2.0940626,41.4476474]]}},
-      {"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[2.1217691,41.4282683],[2.1214998,41.428096],[2.1213575,41.4279838],[2.1211989,41.4278355],[2.1209005,41.4275555],[2.120664,41.4274081],[2.1204478,41.4273254],[2.1202249,41.4272736],[2.1199592,41.4272457],[2.1197168,41.4272541],[2.1194128,41.4273079],[2.1189873,41.4274055],[2.1174923,41.4277226],[2.1172562,41.4277988],[2.1170964,41.4279063],[2.116933,41.4280541],[2.116826,41.4282089],[2.1167121,41.4285578],[2.1166256,41.4288233],[2.1165384,41.4289574],[2.1163575,41.4291083],[2.1161311,41.4292103],[2.1158922,41.4292608],[2.1156416,41.429284],[2.1146578,41.4294159],[2.1144565,41.4295132],[2.1143276,41.4296293],[2.1142672,41.4297859],[2.1142353,41.4302503],[2.1141603,41.430358],[2.1140144,41.4304841],[2.113731,41.430593],[2.1134708,41.4306009],[2.1132308,41.4305385],[2.1129441,41.4303829],[2.1123444,41.430102],[2.1121595,41.4300598],[2.111951,41.4300315],[2.1114773,41.4300166],[2.1108459,41.4300122],[2.1106178,41.4300726],[2.1104743,41.4301967],[2.1100798,41.4307296],[2.1098573,41.4309872],[2.1097294,41.4311285],[2.1094884,41.4313511],[2.1093672,41.431525],[2.1092862,41.431726],[2.1091986,41.4319946],[2.1090616,41.432123],[2.1088296,41.4323172],[2.1085155,41.4327581],[2.1082943,41.4331035],[2.1080357,41.43353],[2.1079783,41.4337546],[2.1079156,41.4343026],[2.1078666,41.4346519],[2.1078018,41.4347902],[2.1076758,41.4348883],[2.1072131,41.4351277],[2.1065166,41.4355192],[2.1060965,41.4359409],[2.105437,41.4366446],[2.1053729,41.4367624],[2.1053909,41.4369511],[2.1054954,41.4375497],[2.1054838,41.437672],[2.1054084,41.4378014],[2.1052201,41.4380016],[2.1048919,41.4381975],[2.1046077,41.4382855],[2.1041751,41.4384957],[2.1040069,41.4386436],[2.1038799,41.4388217],[2.1037932,41.4389281],[2.1036447,41.4390181],[2.1034996,41.4390559],[2.1033374,41.4390665],[2.1020348,41.4391127],[2.1017042,41.4391542],[2.1008818,41.4394164],[2.1005129,41.439612],[2.1002323,41.4398482],[2.1000379,41.4401265],[2.0992249,41.4416448],[2.0991276,41.4417708],[2.0989179,41.4419297],[2.0982574,41.4423932],[2.098071,41.4426197],[2.09774,41.4431074],[2.0977345,41.4432364],[2.0978203,41.4434211],[2.0982199,41.444038],[2.098228,41.4442042],[2.0981512,41.4444271],[2.0980271,41.4446231],[2.0978296,41.444801],[2.0975475,41.4449555],[2.097425,41.4450844],[2.0971898,41.4455043],[2.0970789,41.4456215],[2.0969199,41.4457195],[2.0966331,41.4457847],[2.0962966,41.4458375],[2.0961635,41.4458919],[2.0960598,41.4459715],[2.0959837,41.4460925],[2.0958531,41.4464063],[2.0957776,41.4465079],[2.0956404,41.4465989],[2.0948182,41.4468998],[2.0946387,41.4469954],[2.0943464,41.4472294],[2.0942593,41.4473288],[2.0942105,41.4474727],[2.0941983,41.4476373]]}},
-      {"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[2.1009591,41.4073321],[2.1006735,41.4074345],[2.1005565,41.4075109],[2.100354,41.4077303],[2.1002324,41.4078263],[2.0998988,41.4079538],[2.0992666,41.4081406],[2.0990586,41.4081593],[2.0989318,41.4081788],[2.0987707,41.4082744],[2.0986327,41.4084136],[2.0984224,41.4085133],[2.0981402,41.4085558],[2.0976535,41.4085964],[2.0974273,41.4085585],[2.0972525,41.4084841],[2.0970454,41.4083543],[2.0968895,41.4082109],[2.0967199,41.4079936],[2.0966054,41.4077224],[2.0965404,41.4076309],[2.0964737,41.4075812],[2.0963691,41.4075497],[2.0962009,41.4075993],[2.0958335,41.4076482],[2.0956052,41.4076237],[2.0953886,41.4075868],[2.0951531,41.4075884],[2.0947372,41.4076102],[2.0944708,41.4075356],[2.0941075,41.4074136],[2.0938204,41.4072998],[2.0936736,41.4071522],[2.0933498,41.4067955],[2.0932567,41.4067487],[2.093114,41.4067238],[2.0930179,41.4067681],[2.0929823,41.4068389],[2.0930047,41.406951],[2.0931383,41.4070987],[2.093381,41.4073962],[2.0934061,41.4075267],[2.0933952,41.4076287],[2.0933524,41.4077259],[2.0932371,41.4078091],[2.0927922,41.4080514],[2.0925954,41.4081101],[2.0924404,41.4081194],[2.0921542,41.4081098],[2.0917322,41.4080883],[2.0915772,41.4081008],[2.0913771,41.4081808],[2.0910731,41.4083049],[2.0908379,41.408334],[2.0907153,41.4083181],[2.0904515,41.4082135],[2.0901481,41.4080938],[2.0899935,41.4080444],[2.0898192,41.4080368],[2.0888962,41.4082169],[2.0886248,41.408232],[2.0877003,41.4083252],[2.087551,41.4083698],[2.0870488,41.4086249],[2.0865686,41.4088388],[2.0863517,41.4088627],[2.0861759,41.4088139],[2.0860793,41.40874],[2.0860362,41.408605],[2.0859808,41.4083377],[2.0858862,41.4081168],[2.085711,41.407855],[2.0855848,41.4077388],[2.0854374,41.4076816],[2.0852794,41.4076647],[2.0847032,41.4077677],[2.0842664,41.407837],[2.0841417,41.4078162],[2.084026,41.4077859],[2.0839594,41.4077419],[2.0837602,41.4076023],[2.0835299,41.4074735],[2.0832007,41.4073353],[2.0828483,41.407244],[2.0826262,41.4072256],[2.0825327,41.4072842],[2.0823362,41.4076974],[2.0823616,41.4077863],[2.0824348,41.4078737],[2.0826535,41.4079913],[2.0830993,41.4082715],[2.0832224,41.408462],[2.0832242,41.4085922],[2.0831965,41.4087276],[2.0831133,41.4088315],[2.0829722,41.4088932],[2.0827045,41.4089413],[2.0824582,41.409045],[2.0820457,41.4095072],[2.0820145,41.4096331],[2.0820827,41.4097667],[2.0823934,41.409983],[2.0824504,41.4100871],[2.0824158,41.4102022],[2.0823602,41.4102791],[2.082256,41.4103662],[2.081712,41.4109379],[2.0815479,41.4110279],[2.0813111,41.4110615],[2.0810811,41.411013],[2.0808457,41.4109512],[2.0807385,41.4109666],[2.0807239,41.4110549],[2.0808842,41.4116415],[2.0808791,41.4117719],[2.0808167,41.4118732],[2.0807216,41.4120029],[2.0807107,41.4121155],[2.0808473,41.4124416],[2.0809797,41.4126168],[2.0811595,41.4128027],[2.0812521,41.412974],[2.0811768,41.413128],[2.0810537,41.4132189],[2.0808508,41.4132683],[2.0806604,41.4132879],[2.0803383,41.4135013],[2.0801385,41.4136827],[2.079988,41.4140014],[2.079856,41.4141195],[2.0796116,41.4141925],[2.0791235,41.414297],[2.0789412,41.4143054],[2.0787177,41.4142885],[2.078247,41.4143128],[2.0780759,41.414376],[2.0780164,41.4144329],[2.0778542,41.4147801],[2.0776582,41.414949],[2.077477,41.4150145],[2.0771257,41.4150318],[2.0768556,41.4150743],[2.0765709,41.4152463],[2.0764624,41.4154822],[2.076363,41.4159761],[2.0763438,41.4161945]]}},
-      {"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[2.0762082,41.4161805],[2.0762253,41.4159179],[2.0762655,41.4157218],[2.0763905,41.4152942],[2.0764656,41.4151613],[2.0765846,41.4150473],[2.0768007,41.4149534],[2.0769091,41.4149359],[2.0770482,41.4149213],[2.0772293,41.4149233],[2.0774033,41.4149152],[2.0775984,41.4148641],[2.0777044,41.4147786],[2.0777818,41.4146711],[2.0779117,41.4143838],[2.0779989,41.4142967],[2.0780876,41.4142517],[2.0782941,41.4142085],[2.0784413,41.4142018],[2.0787967,41.4141907],[2.0790014,41.414206],[2.0792008,41.4141846],[2.0794446,41.4141338],[2.0797121,41.4140673],[2.0798396,41.4139873],[2.07989,41.4139194],[2.079927,41.4138431],[2.0799796,41.413737],[2.0800356,41.4136511],[2.0801212,41.4135518],[2.0802814,41.4134248],[2.0804022,41.4133339],[2.0805624,41.4132059],[2.080643,41.4131853],[2.0808972,41.4131481],[2.0809985,41.4131192],[2.0810781,41.4130612],[2.0811083,41.4129937],[2.0811085,41.4129407],[2.0810789,41.4128818],[2.0808882,41.412687],[2.0807473,41.4125244],[2.080659,41.4123529],[2.0806107,41.4122112],[2.0805772,41.4120814],[2.0806044,41.4119454],[2.080651,41.4118877],[2.0807157,41.411796],[2.0807412,41.4117252],[2.0807386,41.4116497],[2.0806853,41.411467],[2.0805919,41.4111539],[2.0805905,41.4110405],[2.0806078,41.410948],[2.0806375,41.4109046],[2.0806901,41.4108756],[2.0807883,41.4108534],[2.0808941,41.410856],[2.0810186,41.41089],[2.0812399,41.4109486],[2.0813858,41.4109536],[2.0814664,41.4109375],[2.0815622,41.4108976],[2.0816509,41.4108477],[2.0817911,41.4107017],[2.0822701,41.4101971],[2.0823055,41.410089],[2.0822811,41.4100401],[2.0821854,41.4099952],[2.0820056,41.4098597],[2.0819022,41.4097274],[2.0818763,41.4096421],[2.0818898,41.4095468],[2.0819424,41.4094504],[2.0821144,41.4092502],[2.0823269,41.4090071],[2.0824735,41.4089227],[2.082672,41.4088519],[2.0828306,41.4088301],[2.0829506,41.4088051],[2.083041,41.4087546],[2.0831037,41.4086678],[2.0831034,41.4084843],[2.0830536,41.4083793],[2.0829098,41.4082603],[2.0822589,41.4078792],[2.0822259,41.4077649],[2.0822385,41.407626],[2.0822992,41.4074899],[2.0824213,41.4072569],[2.0825176,41.407168],[2.0826069,41.4071433],[2.0827681,41.4071363],[2.0829913,41.4071745],[2.0834292,41.407302],[2.0837566,41.4074736],[2.084133,41.4076906],[2.084286,41.4077231],[2.0844971,41.4077005],[2.0852549,41.4075511],[2.085506,41.4075652],[2.0857834,41.4077019],[2.0859108,41.4078693],[2.0860374,41.4081099],[2.0861444,41.4083961],[2.0861734,41.4086417],[2.0862372,41.4087142],[2.0863496,41.4087543],[2.0865128,41.4087409],[2.0875875,41.4082434],[2.0877358,41.4082085],[2.0890017,41.4081083],[2.0899021,41.4079244],[2.0901437,41.4079839],[2.0903691,41.4080905],[2.090729,41.4082278],[2.0908436,41.4082519],[2.0909893,41.4082343],[2.0911813,41.408173],[2.0915749,41.4080156],[2.0917485,41.4080008],[2.0919821,41.4080102],[2.0924701,41.4080399],[2.0925874,41.4080174],[2.0927405,41.4079665],[2.0931952,41.4077056],[2.093269,41.4076117],[2.0932685,41.4075314],[2.0932448,41.4074411],[2.0932127,41.4073655],[2.0928756,41.4069893],[2.0928583,41.4068504],[2.0928937,41.4067463],[2.0929657,41.4066694],[2.0931118,41.4066331],[2.0932528,41.4066262],[2.093373,41.4066758],[2.0935156,41.4067933],[2.0936663,41.4069687],[2.0938449,41.4071709],[2.0939451,41.4072467],[2.0941123,41.4073211],[2.0946869,41.4075083],[2.0948154,41.4075173],[2.0953067,41.4074886],[2.0954923,41.4074995],[2.0956461,41.4075346],[2.0958171,41.4075488],[2.0959933,41.4075394],[2.0963767,41.4074467],[2.0965049,41.4074701],[2.0966112,41.407518],[2.0966841,41.4075951],[2.0967262,41.4076755],[2.0969236,41.4080649],[2.0969886,41.4081457],[2.097114,41.4082594],[2.0972609,41.4083652],[2.0974761,41.4084585],[2.0976403,41.4084921],[2.0978496,41.4084959],[2.0980521,41.4084735],[2.0983483,41.4084173],[2.098475,41.4083727],[2.0985855,41.4083052],[2.0988012,41.4081208],[2.0989366,41.4080775],[2.0991011,41.4080614],[2.0992585,41.4080468],[2.099456,41.4079909],[2.1000287,41.4078173],[2.100153,41.4077686],[2.1002576,41.4076977],[2.1004193,41.4075241],[2.1005412,41.407413],[2.1006796,41.4073533],[2.1009003,41.4072801]]}}
-    ]}
-  },
-  {
-    id:'fauna-e',  label:'Fauna-E',  color:'#22d3ee', width:6, kind:'circle',
-    fly:[2.075,41.431,12.6,45,0],
-    data:{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0761095,41.4351875]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.084949,41.4296751]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0764771,41.415441]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0604858,41.4450029]}}]}
-  },
-  {
-    id:'fauna-l',  label:'Fauna-L',  color:'#4ade80', width:6,
-    fly:[2.105,41.432,12.4,45,0],
-    data:{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[2.1225915,41.4287076],[2.1226828,41.4286255]]}},{"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[2.1232719,41.4284948],[2.1233698,41.4285023]]}},{"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[2.1238325,41.4294124],[2.1239487,41.429339]]}}]}
-  },
-  {
-    id:'fauna-b',  label:'Fauna-B',  color:'#a78bfa', width:6, kind:'circle',
-    fly:[2.098,41.441,14.5,55,0],
-    data:{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0911249,41.4384349]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.091089,41.438146]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0909689,41.4378414]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0908401,41.437517]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0907489,41.4372484]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0906443,41.4369085]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0904674,41.4368963]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0906068,41.4372804]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.09069,41.4375458]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0908103,41.4378771]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0909337,41.4381641]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0909793,41.4384316]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0905985,41.4385623]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0906521,41.4384617]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0901022,41.438691]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0900003,41.4386367]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0896697,41.4388656]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0896697,41.4387625]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0892444,41.4389123]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0891047,41.4388849]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0890532,41.4392794]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0889136,41.4392633]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0891244,41.4396692]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0889912,41.4396982]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0907713,41.4367177]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0906943,41.4366187]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.091105,41.4366394]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0909938,41.4365428]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0910977,41.4361827]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0909235,41.4361751]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0914047,41.4359453]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0913023,41.4358619]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.1031151,41.4389408]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.1031132,41.439158]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.1025102,41.4391785]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.1024906,41.4389584]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.1018759,41.4392211]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.1017956,41.4389789]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.1012005,41.4393869]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.1010752,41.4391668]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.1004468,41.4397291]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.1002452,41.4396308]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0998989,41.4400634]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.1000928,41.4401056]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0997032,41.4404281]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0998936,41.440473]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0994615,41.4408837]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0996501,41.4409326]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0992539,41.4412529]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0994425,41.4412978]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0992685,41.441775]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0989346,41.4416984]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0986601,41.4421755]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0984417,41.4420663]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0982131,41.4425457]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0979484,41.4424688]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0979199,41.4429068]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0976288,41.4428696]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0978107,41.4433235]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.097556,41.4433929]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0980179,41.4436459]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0977995,41.4437154]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0981833,41.4439411]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0979848,41.4439832]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0982032,41.4442982]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0980013,41.4442858]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0980907,41.4445735]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.097859,41.4445289]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0977697,41.444819]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0976605,41.4447025]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0974752,41.4451291]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2.0972569,41.4450547]}}]}
-  }
+<script src="data.js"></script>
+
+<script>
+// ── VISTAS ────────────────────────────────────────────────────────────────────
+// La vista general encuadra TODOS los datos dibujados en Collserola.
+// Jaén y Sierra de Francia son áreas de demostración (sin datos por ahora).
+var DATA_BOUNDS = [[2.056,41.403],[2.128,41.451]];   // bbox de todas las capas
+var VIEWS = [
+  { key:'v_general',  kind:'bounds', bounds:DATA_BOUNDS, pitch:50, bearing:-10, zoomBoost:0.45 },
+  { key:'v_jaen',     kind:'fly', center:[-3.507,38.395], zoom:13.1, pitch:50, bearing:0 },   // Despeñaperros (Jaén)
+  { key:'v_sfrancia', kind:'fly', center:[-6.110,40.492], zoom:12.9, pitch:50, bearing:0 }    // La Alberca / Peña de Francia
 ];
 
 var STYLES = {
@@ -172,33 +262,71 @@ var STYLES = {
   roads: 'https://tiles.openfreemap.org/styles/bright',
 };
 var TERRAIN = 'https://tiles.mapterhorn.com/tilejson.json';
-// Mapterhorn sirve DEM con codificación "terrarium"; hay que declararla o
-// MapLibre la interpreta como "mapbox" y el relieve 3D se rompe.
 var TERRAIN_ENCODING = 'terrarium';
 var POI_KW  = ['poi','bus','transit','parking','aeroway','amenity','shop','tourism','worship','bicycle'];
 var LBL_KW  = ['label','place','city','town','village','suburb','country','state'];
 
-// ── DETECCIÓ DE DISPOSITIU (rendiment) ────────────────────────────────────────
-// En mòbils i pantalles petites reduïm càrrega: sense antialias, sense
-// hillshade i amb menys inclinació inicial.
 var isMobile = window.matchMedia('(max-width: 640px), (pointer: coarse)').matches;
 var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ── ESTAT ─────────────────────────────────────────────────────────────────────
-var map, terrainExag=1.5, poiOn=true, lblOn=true;
-var active={};
-DATA_LAYERS.forEach(function(l){ active[l.id]=false; });
+// ── AGRUPACIÓN DE ELEMENTOS ───────────────────────────────────────────────────
+// Cada feature recibe properties.gid (grupo). Elementos "conectados" comparten
+// gid y por tanto muestran el mismo contenido multimedia.
+//  - Líneas: grupos definidos explícitamente (groupOf) o cada línea su grupo.
+//  - Puntos: clustering por proximidad (puntos a <150 m se consideran conectados).
+function distM(a,b){
+  var R=6371000, dLat=(b[1]-a[1])*Math.PI/180, dLng=(b[0]-a[0])*Math.PI/180;
+  var la1=a[1]*Math.PI/180, la2=b[1]*Math.PI/180;
+  var h=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(la1)*Math.cos(la2)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+function assignGroups(layer){
+  var feats = layer.data.features;
+  if (layer.kind==='circle'){
+    // union-find por proximidad
+    var parent = feats.map(function(_,i){return i;});
+    function find(x){ while(parent[x]!==x){ parent[x]=parent[parent[x]]; x=parent[x]; } return x; }
+    for(var i=0;i<feats.length;i++)
+      for(var j=i+1;j<feats.length;j++)
+        if(distM(feats[i].geometry.coordinates, feats[j].geometry.coordinates) < 150){
+          var ri=find(i), rj=find(j); if(ri!==rj) parent[rj]=ri;
+        }
+    var map_={}, next=0;
+    feats.forEach(function(f,i){
+      var r=find(i);
+      if(!(r in map_)) map_[r]=next++;
+      f.properties.gid = map_[r];
+    });
+    layer.nGroups = next;
+  } else {
+    var g = layer.groupOf || feats.map(function(_,i){return i;});
+    feats.forEach(function(f,i){ f.properties.gid = g[i]; });
+    layer.nGroups = Math.max.apply(null,g)+1;
+  }
+}
+DATA_LAYERS.forEach(assignGroups);
 
-// ── UTILS ─────────────────────────────────────────────────────────────────────
+// ── LEYENDA ───────────────────────────────────────────────────────────────────
+(function(){
+  var c=document.getElementById('legend-rows');
+  DATA_LAYERS.forEach(function(l){
+    var row=document.createElement('div'); row.className='row';
+    row.innerHTML='<span class="dot" style="background:'+l.color+'"></span>'+
+      '<span class="name">'+l.label+'</span> <span class="what">'+(l.what||'')+'</span>';
+    c.appendChild(row);
+  });
+})();
+
+// ── ESTADO ────────────────────────────────────────────────────────────────────
+var map, terrainExag=1.5, poiOn=true, lblOn=true;
+
 function setP(pct,msg){
   document.getElementById('prog').style.width=pct+'%';
   if(msg) document.getElementById('lmsg').textContent=msg;
 }
 
-// ── INICIALITZAR MAPA ─────────────────────────────────────────────────────────
 setP(15, L.l_lib);
 
-// Amaga el carregador una sola vegada (evita quedar-se penjat si hi ha errors).
 var uiShown=false;
 function revealUI(){
   if(uiShown) return; uiShown=true;
@@ -206,27 +334,24 @@ function revealUI(){
   setTimeout(function(){
     var l=document.getElementById('loader'); if(l) l.style.display='none';
     var u=document.getElementById('ui');     if(u) u.style.display='flex';
+    var lg=document.getElementById('legend'); if(lg) lg.style.display='block';
   },300);
 }
-
-// Xarxa de seguretat: mostra la UI passi el que passi, encara que la creació
-// del mapa o la càrrega de tiles falli. Es defineix ABANS de crear el mapa
-// perquè s'executi encara que el constructor llanci una excepció.
 setTimeout(revealUI, 8000);
 
 try {
   map = new maplibregl.Map({
     container:'map',
+    attributionControl:false,
     style: STYLES.topo,
-    center:[2.094,41.435], zoom:11.8, pitch:isMobile?42:55, bearing:-10,
+    center:[2.0925,41.4265], zoom:12.4, pitch:isMobile?42:50, bearing:-10,
     maxPitch:isMobile?70:85, antialias:!isMobile,
-    maxBounds:[[1.85,41.28],[2.32,41.62]],
-    minZoom: 11.5,
+    minZoom: 4.5,
     maxZoom: 17
   });
 } catch(err){
-  console.error('No s\'ha pogut crear el mapa:', err);
-  var lm0=document.getElementById('lmsg'); if(lm0) lm0.textContent='Error carregant el mapa';
+  console.error('No se ha podido crear el mapa:', err);
+  var lm0=document.getElementById('lmsg'); if(lm0) lm0.textContent='Error cargando el mapa';
   revealUI();
 }
 
@@ -238,15 +363,16 @@ if (map) {
 
   map.on('load', function(){
     setP(70, L.l_cfg);
-    try { initLayers(); } catch(e){ console.warn('initLayers:',e); }
+    try { initLayers(); initPopups(); } catch(e){ console.warn('init:',e); }
     revealUI();
+    flyToView(VIEWS[0], true);
   });
 
-  // 'idle' es dispara quan el mapa acaba de renderitzar: xarxa de seguretat extra.
   map.on('idle', revealUI);
 
-  // Si falla el DEM del terreny (font externa), desactiva el relleu perquè el
-  // mapa base es renderitzi igualment en pla en lloc de quedar-se en blanc.
+  // Las líneas guía siguen al mapa (pan/zoom/rotación reposicionan los popups).
+  map.on('move', function(){ updateLeaders(); });
+
   map.on('error', function(e){
     var src = e && e.sourceId;
     if(src==='terrain' || src==='shade'){
@@ -256,29 +382,24 @@ if (map) {
   });
 }
 
-// ── CAPES ─────────────────────────────────────────────────────────────────────
+// ── CAPAS ─────────────────────────────────────────────────────────────────────
 function initLayers(){
-  // Terreny (DEM amb codificació terrarium). No és crític: si falla, el mapa
-  // base i les capes de dades s'han de renderitzar igualment.
   try {
     map.addSource('terrain',{type:'raster-dem',url:TERRAIN,tileSize:512,encoding:TERRAIN_ENCODING});
     map.setTerrain({source:'terrain',exaggeration:terrainExag});
-    // El hillshade reutilitza una segona font DEM completa: costós. Només en
-    // dispositius no-mòbils.
     if(!isMobile){
       map.addSource('shade',{type:'raster-dem',url:TERRAIN,tileSize:512,encoding:TERRAIN_ENCODING});
       map.addLayer({id:'hillshade',type:'hillshade',source:'shade',
         paint:{'hillshade-shadow-color':'#1a2535','hillshade-highlight-color':'#c8d8f0','hillshade-exaggeration':0.4}});
     }
-  } catch(e){ console.warn('terreny:', e); }
+  } catch(e){ console.warn('terreno:', e); }
 
-  // Capes de dades — totes invisibles per defecte
+  // Capas de datos — SIEMPRE visibles (la leyenda las identifica)
   DATA_LAYERS.forEach(function(l){
     map.addSource(l.id+'-src',{type:'geojson',data:l.data});
-    map.addLayer(dataLayerSpec(l,'none'));
+    map.addLayer(dataLayerSpec(l,'visible'));
   });
 
-  // Marcadors de cim
   [[2.1194,41.4228,'Tibidabo 512m'],[2.0938,41.4373,'Magarola 483m']].forEach(function(p){
     var el=document.createElement('div');
     el.style.cssText='background:rgba(15,21,20,0.88);border-left:2px solid #A9BFCF;color:#eaf0fa;'+
@@ -289,8 +410,6 @@ function initLayers(){
   });
 }
 
-// Construeix l'especificació de capa segons el tipus de geometria:
-// 'circle' per a punts (p. ex. balises Fauna-B) i 'line' per a traçats.
 function dataLayerSpec(l, visibility){
   if(l.kind==='circle'){
     return {
@@ -313,14 +432,13 @@ function dataLayerSpec(l, visibility){
   };
 }
 
-// Re-afegir les capes de dades despres de canvi d'estil
 function readdDataLayers(){
   DATA_LAYERS.forEach(function(l){
     if(!map.getSource(l.id+'-src')){
       map.addSource(l.id+'-src',{type:'geojson',data:l.data});
     }
     if(!map.getLayer(l.id)){
-      map.addLayer(dataLayerSpec(l, active[l.id]?'visible':'none'));
+      map.addLayer(dataLayerSpec(l,'visible'));
     }
   });
 }
@@ -348,36 +466,245 @@ function applyVis(){
   });
 }
 
-// ── CONSTRUIR BOTONS DE DADES ─────────────────────────────────────────────────
-(function(){
-  var c=document.getElementById('data-btns');
+// ── POPUPS MULTIMEDIA ─────────────────────────────────────────────────────────
+// Hover = vista previa. Clic = fijar (se pueden fijar varios a la vez).
+// Cada popup puede contener varias imágenes/vídeos (galería automática con flechas).
+var hoverPopup=null, pinnedPopups={};   // pinnedPopups: clave layerId/gid → Popup
+
+// El último popup tocado pasa siempre al frente (los fijados pueden solaparse).
+var zTop=100;
+function bringToFront(p){
+  var el = p.getElement && p.getElement();
+  if(el) el.style.zIndex = ++zTop;
+}
+function raiseOnInteract(p){
+  var el = p.getElement && p.getElement();
+  if(el) el.addEventListener('mousedown', function(){ bringToFront(p); }, true);
+}
+
+// ── LÍNEAS GUÍA (popup arrastrado → punto original en el mapa) ────────────────
+var leaderSvg=null;
+function ensureLeaderSvg(){
+  if(leaderSvg) return leaderSvg;
+  leaderSvg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  leaderSvg.id='leaders';
+  map.getContainer().appendChild(leaderSvg);
+  return leaderSvg;
+}
+function updateLeaders(){
+  var contRect = map.getContainer().getBoundingClientRect();
+  Object.keys(pinnedPopups).forEach(function(k){
+    var p=pinnedPopups[k];
+    if(!p._line) return;
+    var a=map.project(p._anchor);
+    var content=p.getElement() && p.getElement().querySelector('.maplibregl-popup-content');
+    if(!content) return;
+    var r=content.getBoundingClientRect();
+    p._line.setAttribute('x1',a.x); p._line.setAttribute('y1',a.y);
+    p._line.setAttribute('x2',r.left-contRect.left+r.width/2);
+    p._line.setAttribute('y2',r.top-contRect.top+r.height/2);
+    p._dot.setAttribute('cx',a.x); p._dot.setAttribute('cy',a.y);
+  });
+}
+function setDetached(p){
+  var moved = Math.abs(p._drag[0])>18 || Math.abs(p._drag[1])>18;
+  var el=p.getElement();
+  var tip=el && el.querySelector('.maplibregl-popup-tip');
+  if(tip) tip.style.visibility = moved ? 'hidden' : 'visible';
+  if(moved && !p._line){
+    var svg=ensureLeaderSvg(), NS='http://www.w3.org/2000/svg';
+    p._line=document.createElementNS(NS,'line');
+    p._line.setAttribute('stroke',p._color);
+    p._dot=document.createElementNS(NS,'circle');
+    p._dot.setAttribute('r',4); p._dot.setAttribute('fill',p._color);
+    svg.appendChild(p._line); svg.appendChild(p._dot);
+  } else if(!moved && p._line){
+    p._line.remove(); p._dot.remove(); p._line=null; p._dot=null;
+  }
+}
+function removeLeader(p){
+  if(p._line){ p._line.remove(); p._line=null; }
+  if(p._dot){ p._dot.remove(); p._dot=null; }
+}
+// Arrastre del popup fijado (el punto de anclaje no cambia; la línea lo indica).
+function makeDraggable(p){
+  var el=p.getElement(); if(!el) return;
+  var content=el.querySelector('.maplibregl-popup-content');
+  content.addEventListener('mousedown', function(ev){
+    if(ev.target.closest('.mp-nav') || ev.target.closest('.maplibregl-popup-close-button')) return;
+    ev.preventDefault();
+    el.classList.add('dragging');
+    var sx=ev.clientX, sy=ev.clientY, base=p._drag.slice();
+    function mm(e2){
+      p._drag=[base[0]+e2.clientX-sx, base[1]+e2.clientY-sy];
+      var o=[p._drag[0], p._drag[1]-14];
+      if(p.setOffset){ p.setOffset(o); } else { p.options.offset=o; p._update && p._update(); }
+      setDetached(p);
+      updateLeaders();
+    }
+    function mu(){
+      el.classList.remove('dragging');
+      document.removeEventListener('mousemove',mm);
+      document.removeEventListener('mouseup',mu);
+    }
+    document.addEventListener('mousemove',mm);
+    document.addEventListener('mouseup',mu);
+  });
+}
+
+function mediaItems(m){ return m.media || [{type:m.type, src:m.src}]; }
+
+function slideHTML(it, on){
+  var media = it.type==='video'
+    ? '<video src="'+it.src+'"'+(on?' autoplay':'')+' muted loop playsinline></video>'
+    : '<img src="'+it.src+'" alt="" loading="lazy">';
+  return '<div class="mp-slide'+(on?' on':'')+'">'+media+'</div>';
+}
+
+function mediaHTML(layer, gid){
+  var m = MEDIA[layer.id][gid % MEDIA[layer.id].length];
+  var items = mediaItems(m);
+  var slides = items.map(function(it,i){ return slideHTML(it, i===0); }).join('');
+  var nav = items.length>1
+    ? '<button class="mp-nav mp-prev" data-d="-1">‹</button>'+
+      '<button class="mp-nav mp-next" data-d="1">›</button>'+
+      '<div class="mp-count">1/'+items.length+'</div>'+
+      '<div class="mp-dots">'+items.map(function(_,i){return '<span'+(i===0?' class="on"':'')+'></span>';}).join('')+'</div>'
+    : '';
+  return '<div class="mp-tag" style="color:'+layer.color+'">'+
+           '<span class="dot" style="background:'+layer.color+'"></span>'+layer.label+
+         '</div>'+
+         '<div class="mp-media">'+slides+nav+'</div>'+
+         '<div class="mp-title">'+m.title+'</div>'+
+         '<div class="mp-desc">'+m.desc+'</div>';
+}
+
+// Avanza una galería un paso (dir = +1 / -1).
+function stepGallery(box, dir){
+  var slides = box.querySelectorAll('.mp-slide');
+  if(slides.length<2) return;
+  var dots = box.querySelectorAll('.mp-dots span');
+  var cur = 0;
+  slides.forEach(function(s,i){ if(s.classList.contains('on')) cur=i; });
+  var next = (cur + dir + slides.length) % slides.length;
+  slides.forEach(function(s,i){
+    s.classList.toggle('on', i===next);
+    var v=s.querySelector('video');
+    if(v){ if(i===next){ v.play().catch(function(){}); } else { v.pause(); } }
+  });
+  dots.forEach(function(d,i){ d.classList.toggle('on', i===next); });
+  var c=box.querySelector('.mp-count'); if(c) c.textContent=(next+1)+'/'+slides.length;
+}
+
+// Flechas: saltar manualmente (pausa el avance automático unos segundos).
+document.addEventListener('click', function(ev){
+  var btn = ev.target.closest && ev.target.closest('.mp-nav');
+  if(!btn) return;
+  ev.stopPropagation();
+  var box = btn.closest('.mp-media');
+  box.dataset.hold = Date.now();          // el usuario tomó el control
+  stepGallery(box, +btn.dataset.d);
+}, true);
+
+// Carrusel automático: cada 4 s avanza todas las galerías visibles,
+// salvo las que el usuario acaba de manejar (8 s de pausa tras usar flechas).
+var AUTO_MS = 4000, HOLD_MS = 8000;
+setInterval(function(){
+  document.querySelectorAll('.mp-media').forEach(function(box){
+    var hold = +box.dataset.hold || 0;
+    if(Date.now() - hold < HOLD_MS) return;
+    stepGallery(box, 1);
+  });
+}, AUTO_MS);
+
+function initPopups(){
   DATA_LAYERS.forEach(function(l){
-    var btn=document.createElement('button');
-    btn.style.borderLeftColor=l.color;
-    var sw=document.createElement('span');
-    sw.className='sw'; sw.style.background=l.color;
-    btn.appendChild(sw);
-    btn.appendChild(document.createTextNode(l.label));
-    btn.addEventListener('click',function(){
-      if(!map.isStyleLoaded()||!map.getLayer(l.id)) return;
-      active[l.id]=!active[l.id];
-      map.setLayoutProperty(l.id,'visibility',active[l.id]?'visible':'none');
-      btn.classList.toggle('on',active[l.id]);
-      if(l.fly && active[l.id]){
-        map.flyTo({center:[l.fly[0],l.fly[1]],zoom:l.fly[2],pitch:l.fly[3],bearing:l.fly[4],duration:reduceMotion?0:1500});
+    map.on('mouseenter', l.id, function(){ map.getCanvas().style.cursor='pointer'; });
+    map.on('mouseleave', l.id, function(){
+      map.getCanvas().style.cursor='';
+      if(hoverPopup){ hoverPopup.remove(); hoverPopup=null; }
+    });
+    map.on('mousemove', l.id, function(e){
+      var f=e.features[0]; if(!f) return;
+      var key=l.id+'/'+f.properties.gid;
+      if(pinnedPopups[key]){                        // ya está fijado: sin preview
+        if(hoverPopup){ hoverPopup.remove(); hoverPopup=null; }
+        return;
       }
+      var html=mediaHTML(l, f.properties.gid);
+      if(!hoverPopup){
+        hoverPopup=new maplibregl.Popup({closeButton:false,closeOnClick:false,className:'media-popup',offset:14,maxWidth:'260px'});
+        hoverPopup.setLngLat(e.lngLat).setHTML(html).addTo(map);
+        hoverPopup._gkey=key;
+        bringToFront(hoverPopup);                   // preview por encima de lo fijado
+      } else {
+        hoverPopup.setLngLat(e.lngLat);
+        if(hoverPopup._gkey!==key){ hoverPopup.setHTML(html); hoverPopup._gkey=key; }
+      }
+    });
+    map.on('click', l.id, function(e){
+      var f=e.features[0]; if(!f) return;
+      var key=l.id+'/'+f.properties.gid;
+      if(hoverPopup){ hoverPopup.remove(); hoverPopup=null; }
+      if(pinnedPopups[key]){                        // ya fijado: traerlo al frente
+        bringToFront(pinnedPopups[key]);
+        return;
+      }
+      var p=new maplibregl.Popup({closeButton:true,closeOnClick:false,className:'media-popup pinned',
+                                  anchor:'bottom',offset:[0,-14],maxWidth:'260px'});
+      p.setLngLat(e.lngLat).setHTML(mediaHTML(l, f.properties.gid)).addTo(map);
+      p._anchor=e.lngLat; p._drag=[0,0]; p._color=l.color;
+      pinnedPopups[key]=p;
+      bringToFront(p);                              // el recién abierto, al frente
+      raiseOnInteract(p);                           // y al frente al volver a tocarlo
+      makeDraggable(p);                             // arrastrable; línea guía al punto
+      p.on('close',function(){ removeLeader(p); delete pinnedPopups[key]; });
+      e.preventDefault && e.preventDefault();
+    });
+  });
+}
+
+// ── SECCIONES PLEGABLES DEL MENÚ ──────────────────────────────────────────────
+document.querySelectorAll('.sec .sechead').forEach(function(h){
+  h.addEventListener('click', function(){
+    h.parentElement.classList.toggle('open');
+  });
+});
+
+// ── BOTONES DE VISTA ──────────────────────────────────────────────────────────
+function flyToView(v, instant){
+  if(!map) return;
+  var dur = (instant||reduceMotion) ? 0 : 2200;
+  if(v.kind==='bounds'){
+    var cam = map.cameraForBounds(v.bounds, {padding:{top:50,bottom:60,left:250,right:60}, bearing:v.bearing||0});
+    if(cam) map.flyTo({center:cam.center, zoom:cam.zoom+(v.zoomBoost||0), pitch:v.pitch||0, bearing:v.bearing||0, duration:dur, essential:true});
+  } else {
+    map.flyTo({center:v.center, zoom:v.zoom, pitch:v.pitch||0, bearing:v.bearing||0, duration:dur, essential:true});
+  }
+}
+(function(){
+  var c=document.getElementById('view-btns');
+  VIEWS.forEach(function(v,i){
+    var btn=document.createElement('button');
+    btn.textContent=L[v.key]||v.key;
+    btn.style.borderLeftColor = i===0?'#3B66C2':'#cfd6d9';
+    if(i===0) btn.classList.add('on');
+    btn.addEventListener('click',function(){
+      c.querySelectorAll('button').forEach(function(b){ b.classList.remove('on'); b.style.borderLeftColor='#cfd6d9'; });
+      btn.classList.add('on'); btn.style.borderLeftColor='#3B66C2';
+      flyToView(v,false);
     });
     c.appendChild(btn);
   });
 })();
 
-// ── ESTIL ─────────────────────────────────────────────────────────────────────
+// ── ESTILO ────────────────────────────────────────────────────────────────────
 ['topo','roads'].forEach(function(k){
   document.getElementById('sty-'+k).addEventListener('click',function(){
     ['topo','roads'].forEach(function(s){
       var b=document.getElementById('sty-'+s);
       b.classList.toggle('on',s===k);
-      b.style.borderLeftColor=s===k?'#3B66C2':'#455057';
+      b.style.borderLeftColor=s===k?'#3B66C2':'#cfd6d9';
     });
     map.setStyle(STYLES[k]);
     map.once('style.load',function(){
@@ -394,37 +721,29 @@ function applyVis(){
   });
 });
 
-// ── VISTES ────────────────────────────────────────────────────────────────────
-document.querySelectorAll('[data-fly]').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    var p=btn.dataset.fly.split(',').map(Number);
-    map.flyTo({center:[p[1],p[0]],zoom:p[2],pitch:p[3],bearing:p[4],duration:reduceMotion?0:1800,essential:true});
-  });
-});
-
-// ── TERRENY ───────────────────────────────────────────────────────────────────
+// ── TERRENO ───────────────────────────────────────────────────────────────────
 [['ter-15',1.5],['ter-10',1.0],['ter-0',0]].forEach(function(pair){
   document.getElementById(pair[0]).addEventListener('click',function(){
     applyTerrain(pair[1]);
     [['ter-15',1.5],['ter-10',1.0],['ter-0',0]].forEach(function(p){
       var b=document.getElementById(p[0]);
       b.classList.toggle('on',p[1]===pair[1]);
-      b.style.borderLeftColor=p[1]===pair[1]?'#3B66C2':'#455057';
+      b.style.borderLeftColor=p[1]===pair[1]?'#3B66C2':'#cfd6d9';
     });
   });
 });
 
-// ── VISIBILITAT ───────────────────────────────────────────────────────────────
+// ── VISIBILIDAD ───────────────────────────────────────────────────────────────
 document.getElementById('btn-poi').addEventListener('click',function(){
   poiOn=!poiOn;
   this.classList.toggle('on',poiOn);
-  this.style.borderLeftColor=poiOn?'#3B66C2':'#455057';
+  this.style.borderLeftColor=poiOn?'#3B66C2':'#cfd6d9';
   applyVis();
 });
 document.getElementById('btn-lbl').addEventListener('click',function(){
   lblOn=!lblOn;
   this.classList.toggle('on',lblOn);
-  this.style.borderLeftColor=lblOn?'#3B66C2':'#455057';
+  this.style.borderLeftColor=lblOn?'#3B66C2':'#cfd6d9';
   applyVis();
 });
 </script>

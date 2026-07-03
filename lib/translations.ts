@@ -29,7 +29,7 @@ export interface Dict {
   };
   plataforma: { label: string; title: string; subtitle: string; deployLabel: string; items: { k: string; v: string }[] };
   referencias: { label: string; title: string; items: { name: string; scope: string; points?: string[] }[] };
-  descargas: { label: string; title: string; subtitle: string; dossierTitle: string; dossierDesc: string; download: string; videoTag: string; videos: string[] };
+  descargas: { label: string; title: string; subtitle: string; contactPrompt: string; contactLink: string; dossierTitle: string; dossierDesc: string; download: string; videoTag: string; videos: string[] };
   contacto: {
     label: string; title: string; subtitle: string;
     reachOut: string;
@@ -57,7 +57,7 @@ const es: Dict = {
   },
   flujo: {
     title: "Detecta. Alerta. Protege.",
-    sub1: "En milisegundos, ",
+    sub1: "En tiempo real, ",
     sub2: " transforma la presencia de un animal en una alerta accionable para el conductor y el centro de control.",
     steps: [
       { title: "Detecta", sub: "Precisión milimétrica" },
@@ -94,6 +94,8 @@ const es: Dict = {
     label: "Descargas",
     title: "Documentación y material audiovisual.",
     subtitle: "Descargue el dossier técnico y los vídeos de producto y referencias de AVIZOR Fauna.",
+    contactPrompt: "Si desea más información, ",
+    contactLink: "contacte con nosotros",
     dossierTitle: "Dossier técnico AVIZOR Fauna",
     dossierDesc: "Presentación completa del sistema: tecnologías de detección, arquitectura, plataforma y referencias con la administración.",
     download: "Descargar",
@@ -112,7 +114,7 @@ const es: Dict = {
     ambitoWord: "Ámbito",
     comingSoon: "Próximamente",
     mapTitle: "Ejemplo de aplicación · Sierra de Collserola",
-    mapDesc: "Mapa 3D interactivo del terreno con la traza real de detección Fauna-FO superpuesta. Explore el relieve, cambie de estilo y active las capas de datos.",
+    mapDesc: "Mapa 3D interactivo con las instalaciones de la gama superpuestas al terreno. Pase el cursor o haga clic sobre cada traza para ver imágenes y vídeos del sistema.",
     mapDescMobile: "Traza real de detección en la Sierra de Collserola, con un tramo por cada tecnología de la gama AVIZOR Fauna.",
     expand: "↗ Expandir mapa",
     collapse: "↙ Contraer mapa",
@@ -173,7 +175,7 @@ const es: Dict = {
       { name: "JCyL · Somacyl — Sierra de Francia", scope: "Proyecto piloto de señalización inteligente en la SA-201 (Sierra de Francia, tramo El Cabaco–El Casarito, p.k. 12+000–16+500). La visión artificial detecta la fauna —sobre todo corzos y jabalíes— y activa la señalización dinámica en tiempo real, avisando solo ante riesgo real.", points: ["Sistema experimental pionero en Castilla y León, en 4 km de la SA-201 (El Cabaco–El Casarito).", "9 cámaras y 11 señales de aviso, de espectro visible y térmicas.", "Espectro térmico: operativo con baja iluminación, niebla o nieve; distingue animales de personas.", "Al detectar fauna se activan grandes paneles luminosos; el paso se graba y registra en la plataforma, con control remoto y alarmas al centro de control.", "Proyecto de la Junta de Castilla y León con TEVA y la Universidad de Salamanca."] },
       { name: "Junta de Castilla-La Mancha", scope: "Detección por barreras láser con avisos automáticos para la seguridad vial.", points: ["Barreras láser multihaz desplegadas en puntos negros de fauna de la red de carreteras autonómica, con corte simultáneo de cuatro haces infrarrojos para minimizar falsas alarmas.", "Detección de hasta 200 m por equipo; descarta vegetación, aves y fauna de pequeño porte, centrando el aviso en los cruces de riesgo real.", "Al cortarse el haz se activa de forma automática la señalización de aviso en el propio tramo, alertando al conductor en tiempo real.", "Comunicación de baja latencia (< 1 s) por LoRaWAN con respaldo 4G/LTE; equipos autónomos e IP66, aptos para intemperie."] },
       { name: "MITMA · A-4 y A-44 (Jaén y Granada)", scope: "Corredor A-4 / A-44 en Jaén y Granada. El Ministerio de Transportes impulsa obras de mejora de la seguridad vial y protección de la fauna en las autovías A-4, A-32 y A-44 y en la N-323, con cargo a los fondos europeos NextGenerationEU.", points: ["57 cámaras de vídeo e infrarrojas desplegadas en ≈14 enlaces; portal operativo avizor-fauna.tecnologiasviales.com.", "Sistemas de detección de animales con paneles luminosos de advertencia y señales P-24 luminosas en los enlaces.", "Mejora de cerramientos y rampas de escape para evitar el acceso de la fauna a la calzada.", "Disuasores acústicos y ópticos y carteles de presencia de lince."] },
-      { name: "DGT", scope: "Dirección General de Tráfico — presentación de la baliza LIDAR de detección y aviso de fauna, conectada a DGT 3.0.", points: ["Balizas de control y disuasorias: al acercarse un vehículo, avisan al conductor y ahuyentan a la fauna con luz y sonido. Solo se activan con tráfico, así los animales cruzan libremente cuando no lo hay.", "Vallado cinegético + tecnología: valla convencional con huecos de ~100 m en pasos de fauna, donde cámaras detectan al animal y alertan al conductor.", "Vallado virtual: dispositivos que detectan los faros a 200 m y emiten señales para frenar al animal, sin bloquear el cruce cuando no hay tráfico."] },
+      { name: "DGT", scope: "Dirección General de Tráfico — presentación de la baliza LIDAR de detección y aviso de fauna, preparada para DGT 3.0.", points: ["Balizas de control y disuasorias: al acercarse un vehículo, avisan al conductor y ahuyentan a la fauna con luz y sonido. Solo se activan con tráfico, así los animales cruzan libremente cuando no lo hay.", "Vallado cinegético + tecnología: valla convencional con huecos de ~100 m en pasos de fauna, donde cámaras detectan al animal y alertan al conductor.", "Vallado virtual: dispositivos que detectan los faros a 200 m y emiten señales para frenar al animal, sin bloquear el cruce cuando no hay tráfico."] },
     ],
   },
   contacto: {
@@ -223,7 +225,7 @@ const en: Dict = {
   },
   flujo: {
     title: "Detect. Alert. Protect.",
-    sub1: "In milliseconds, ",
+    sub1: "In real time, ",
     sub2: " turns the presence of an animal into an actionable alert for the driver and the control centre.",
     steps: [
       { title: "Detect", sub: "Millimetre precision" },
@@ -260,6 +262,8 @@ const en: Dict = {
     label: "Downloads",
     title: "Documentation and audiovisual material.",
     subtitle: "Download the AVIZOR Fauna technical dossier and the product and reference videos.",
+    contactPrompt: "If you need more information, ",
+    contactLink: "contact us",
     dossierTitle: "AVIZOR Fauna technical dossier",
     dossierDesc: "Complete overview of the system: detection technologies, architecture, platform and references with public authorities.",
     download: "Download",
@@ -278,7 +282,7 @@ const en: Dict = {
     ambitoWord: "Context",
     comingSoon: "Coming soon",
     mapTitle: "Application example · Serra de Collserola",
-    mapDesc: "Interactive 3D terrain map with the real Fauna-FO detection trace overlaid. Explore the relief, switch styles and toggle the data layers.",
+    mapDesc: "Interactive 3D map with the range's installations overlaid on the terrain. Hover or click each trace to see images and videos of the system.",
     mapDescMobile: "Real detection trace on Sierra de Collserola, with one stretch per technology in the AVIZOR Fauna range.",
     expand: "↗ Expand map",
     collapse: "↙ Collapse map",
@@ -339,7 +343,7 @@ const en: Dict = {
       { name: "JCyL · Somacyl — Sierra de Francia", scope: "Pilot intelligent-signage project on the SA-201 (Sierra de Francia, El Cabaco–El Casarito stretch, km 12+000–16+500). Artificial vision detects wildlife —mainly roe deer and wild boar— and activates dynamic signage in real time, warning drivers only when there is a real risk.", points: ["Experimental system, a first in Castilla y León, along 4 km of the SA-201 (El Cabaco–El Casarito).", "9 cameras and 11 warning signs, both visible-spectrum and thermal.", "Thermal spectrum: keeps working in low light, fog or snow and tells animals from people.", "On detecting wildlife, large luminous panels activate; the crossing is recorded and logged on the platform, with remote control and alerts to the control centre.", "A Junta de Castilla y León project with TEVA and the University of Salamanca."] },
       { name: "Junta de Castilla-La Mancha", scope: "Detection via laser barriers with automatic warnings for road safety.", points: ["Multi-beam laser barriers deployed at wildlife black spots on the regional road network, with simultaneous breaking of four infrared beams to minimise false alarms.", "Detection range of up to 200 m per unit; filters out vegetation, birds and small animals, focusing the alert on real-risk crossings.", "Breaking the beam automatically activates warning signage on the stretch itself, alerting the driver in real time.", "Low-latency (< 1 s) LoRaWAN communication backed up by 4G/LTE; autonomous, IP66-rated units built for the outdoors."] },
       { name: "MITMA · A-4 and A-44 (Jaén and Granada)", scope: "A-4 / A-44 corridor in Jaén and Granada. Spain's Ministry of Transport is driving works to improve road safety and wildlife protection on the A-4, A-32 and A-44 motorways and the N-323 road, funded by the EU NextGenerationEU programme.", points: ["57 video and infrared cameras deployed across ≈14 junctions; live portal avizor-fauna.tecnologiasviales.com.", "Animal-detection systems with luminous warning panels and lit P-24 signs at the junctions.", "Upgraded fencing and escape ramps to keep wildlife off the carriageway.", "Acoustic and optical deterrents and lynx-presence warning signs."] },
-      { name: "DGT", scope: "Directorate-General of Traffic — presentation of the LIDAR wildlife detection and warning beacon, connected to DGT 3.0.", points: ["Control and deterrent beacons: as a vehicle approaches, they warn the driver and scare wildlife away with light and sound. They only activate with traffic, so animals cross freely when there is none.", "Game fencing + technology: a conventional fence with ~100 m gaps at wildlife crossings, where cameras detect the animal and alert the driver.", "Virtual fencing: devices that detect headlights at 200 m and emit signals to stop the animal, without blocking the crossing when there is no traffic."] },
+      { name: "DGT", scope: "Directorate-General of Traffic — presentation of the LIDAR wildlife detection and warning beacon, ready for DGT 3.0.", points: ["Control and deterrent beacons: as a vehicle approaches, they warn the driver and scare wildlife away with light and sound. They only activate with traffic, so animals cross freely when there is none.", "Game fencing + technology: a conventional fence with ~100 m gaps at wildlife crossings, where cameras detect the animal and alert the driver.", "Virtual fencing: devices that detect headlights at 200 m and emit signals to stop the animal, without blocking the crossing when there is no traffic."] },
     ],
   },
   contacto: {
@@ -389,7 +393,7 @@ const pt: Dict = {
   },
   flujo: {
     title: "Deteta. Alerta. Protege.",
-    sub1: "Em milissegundos, ",
+    sub1: "Em tempo real, ",
     sub2: " transforma a presença de um animal num alerta acionável para o condutor e o centro de controlo.",
     steps: [
       { title: "Deteta", sub: "Precisão milimétrica" },
@@ -426,6 +430,8 @@ const pt: Dict = {
     label: "Transferências",
     title: "Documentação e material audiovisual.",
     subtitle: "Transfira o dossiê técnico e os vídeos de produto e referências da AVIZOR Fauna.",
+    contactPrompt: "Se desejar mais informação, ",
+    contactLink: "contacte-nos",
     dossierTitle: "Dossiê técnico AVIZOR Fauna",
     dossierDesc: "Apresentação completa do sistema: tecnologias de deteção, arquitetura, plataforma e referências com a administração.",
     download: "Transferir",
@@ -444,7 +450,7 @@ const pt: Dict = {
     ambitoWord: "Contexto",
     comingSoon: "Em breve",
     mapTitle: "Exemplo de aplicação · Serra de Collserola",
-    mapDesc: "Mapa 3D interativo do terreno com o traçado real de deteção Fauna-FO sobreposto. Explore o relevo, mude de estilo e ative as camadas de dados.",
+    mapDesc: "Mapa 3D interativo com as instalações da gama sobrepostas ao terreno. Passe o cursor ou clique em cada traçado para ver imagens e vídeos do sistema.",
     mapDescMobile: "Traçado real de deteção na Sierra de Collserola, com um troço por cada tecnologia da gama AVIZOR Fauna.",
     expand: "↗ Expandir mapa",
     collapse: "↙ Recolher mapa",
@@ -505,7 +511,7 @@ const pt: Dict = {
       { name: "JCyL · Somacyl — Sierra de Francia", scope: "Projeto-piloto de sinalização inteligente na SA-201 (Sierra de Francia, troço El Cabaco–El Casarito, p.k. 12+000–16+500). A visão artificial deteta a fauna —sobretudo corços e javalis— e ativa a sinalização dinâmica em tempo real, avisando apenas perante risco real.", points: ["Sistema experimental, pioneiro em Castela e Leão, num troço de 4 km da SA-201 (El Cabaco–El Casarito).", "9 câmaras e 11 sinais de aviso, de espetro visível e térmicos.", "Espetro térmico: mantém-se operacional com baixa luminosidade, nevoeiro ou neve e distingue animais de pessoas.", "Ao detetar fauna ativam-se grandes painéis luminosos; a passagem é gravada e registada na plataforma, com controlo remoto e alarmes ao centro de controlo.", "Projeto da Junta de Castilla y León com a TEVA e a Universidade de Salamanca."] },
       { name: "Junta de Castilla-La Mancha", scope: "Deteção por barreiras laser com avisos automáticos para a segurança rodoviária.", points: ["Barreiras laser multifeixe instaladas em pontos negros de fauna da rede de estradas regional, com corte simultâneo de quatro feixes infravermelhos para minimizar falsos alarmes.", "Deteção até 200 m por equipamento; descarta vegetação, aves e fauna de pequeno porte, concentrando o aviso nas passagens de risco real.", "Ao cortar o feixe ativa-se automaticamente a sinalização de aviso no próprio troço, alertando o condutor em tempo real.", "Comunicação de baixa latência (< 1 s) via LoRaWAN com apoio 4G/LTE; equipamentos autónomos e IP66, preparados para intempéries."] },
       { name: "MITMA · A-4 e A-44 (Jaén e Granada)", scope: "Corredor A-4 / A-44 em Jaén e Granada. O Ministério dos Transportes promove obras de melhoria da segurança rodoviária e proteção da fauna nas autovias A-4, A-32 e A-44 e na estrada N-323, financiadas pelo programa europeu NextGenerationEU.", points: ["57 câmaras de vídeo e infravermelhas implementadas em ≈14 nós; portal operacional avizor-fauna.tecnologiasviales.com.", "Sistemas de deteção de animais com painéis luminosos de aviso e sinais P-24 luminosos nos nós.", "Melhoria das vedações e rampas de escape para evitar o acesso da fauna à via.", "Dissuasores acústicos e óticos e cartazes de presença de lince."] },
-      { name: "DGT", scope: "Direção-Geral de Tráfego — apresentação da baliza LIDAR de deteção e aviso de fauna, ligada à DGT 3.0.", points: ["Balizas de controlo e dissuasoras: ao aproximar-se um veículo, avisam o condutor e afugentam a fauna com luz e som. Só se ativam com tráfego, para que os animais atravessem livremente quando não o há.", "Vedação cinegética + tecnologia: vedação convencional com aberturas de ~100 m em passagens de fauna, onde câmaras detetam o animal e alertam o condutor.", "Vedação virtual: dispositivos que detetam os faróis a 200 m e emitem sinais para travar o animal, sem bloquear a passagem quando não há tráfego."] },
+      { name: "DGT", scope: "Direção-Geral de Tráfego — apresentação da baliza LIDAR de deteção e aviso de fauna, preparada para a DGT 3.0.", points: ["Balizas de controlo e dissuasoras: ao aproximar-se um veículo, avisam o condutor e afugentam a fauna com luz e som. Só se ativam com tráfego, para que os animais atravessem livremente quando não o há.", "Vedação cinegética + tecnologia: vedação convencional com aberturas de ~100 m em passagens de fauna, onde câmaras detetam o animal e alertam o condutor.", "Vedação virtual: dispositivos que detetam os faróis a 200 m e emitem sinais para travar o animal, sem bloquear a passagem quando não há tráfego."] },
     ],
   },
   contacto: {
@@ -555,7 +561,7 @@ const ca: Dict = {
   },
   flujo: {
     title: "Detecta. Alerta. Protegeix.",
-    sub1: "En mil·lisegons, ",
+    sub1: "En temps real, ",
     sub2: " transforma la presència d'un animal en una alerta accionable per al conductor i el centre de control.",
     steps: [
       { title: "Detecta", sub: "Precisió mil·limètrica" },
@@ -592,6 +598,8 @@ const ca: Dict = {
     label: "Descàrregues",
     title: "Documentació i material audiovisual.",
     subtitle: "Descarregueu el dossier tècnic i els vídeos de producte i referències d'AVIZOR Fauna.",
+    contactPrompt: "Si voleu més informació, ",
+    contactLink: "contacteu amb nosaltres",
     dossierTitle: "Dossier tècnic AVIZOR Fauna",
     dossierDesc: "Presentació completa del sistema: tecnologies de detecció, arquitectura, plataforma i referències amb l'administració.",
     download: "Descarregar",
@@ -610,7 +618,7 @@ const ca: Dict = {
     ambitoWord: "Context",
     comingSoon: "Pròximament",
     mapTitle: "Exemple d'aplicació · Serra de Collserola",
-    mapDesc: "Mapa 3D interactiu del terreny amb la traça real de detecció Fauna-FO superposada. Exploreu el relleu, canvieu d'estil i activeu les capes de dades.",
+    mapDesc: "Mapa 3D interactiu amb les instal·lacions de la gamma superposades al terreny. Passeu el cursor o feu clic sobre cada traça per veure imatges i vídeos del sistema.",
     mapDescMobile: "Traça real de detecció a la Serra de Collserola, amb un tram per a cada tecnologia de la gamma AVIZOR Fauna.",
     expand: "↗ Ampliar mapa",
     collapse: "↙ Reduir mapa",
@@ -671,7 +679,7 @@ const ca: Dict = {
       { name: "JCyL · Somacyl — Sierra de Francia", scope: "Projecte pilot de senyalització intel·ligent a la SA-201 (Sierra de Francia, tram El Cabaco–El Casarito, p.k. 12+000–16+500). La visió artificial detecta la fauna —sobretot cabirols i senglars— i activa la senyalització dinàmica en temps real, avisant només davant risc real.", points: ["Sistema experimental, pioner a Castella i Lleó, en un tram de 4 km de la SA-201 (El Cabaco–El Casarito).", "9 càmeres i 11 senyals d'avís, d'espectre visible i tèrmics.", "Espectre tèrmic: continua operatiu amb baixa il·luminació, boira o neu i distingeix animals de persones.", "En detectar fauna s'activen grans panells lluminosos; el pas es grava i es registra a la plataforma, amb control remot i alarmes al centre de control.", "Projecte de la Junta de Castilla y León amb TEVA i la Universitat de Salamanca."] },
       { name: "Junta de Castilla-La Mancha", scope: "Detecció per barreres làser amb avisos automàtics per a la seguretat viària.", points: ["Barreres làser multifeix desplegades en punts negres de fauna de la xarxa de carreteres autonòmica, amb tall simultani de quatre feixos infrarojos per minimitzar falses alarmes.", "Detecció fins a 200 m per equip; descarta vegetació, ocells i fauna de mida petita, centrant l'avís en els encreuaments de risc real.", "En tallar-se el feix s'activa automàticament la senyalització d'avís al mateix tram, alertant el conductor en temps real.", "Comunicació de baixa latència (< 1 s) per LoRaWAN amb suport 4G/LTE; equips autònoms i IP66, preparats per a la intempèrie."] },
       { name: "MITMA · A-4 i A-44 (Jaén i Granada)", scope: "Corredor A-4 / A-44 a Jaén i Granada. El Ministeri de Transports impulsa obres de millora de la seguretat viària i protecció de la fauna a les autovies A-4, A-32 i A-44 i a la N-323, finançades pel programa europeu NextGenerationEU.", points: ["57 càmeres de vídeo i infraroges desplegades en ≈14 enllaços; portal operatiu avizor-fauna.tecnologiasviales.com.", "Sistemes de detecció d'animals amb panells lluminosos d'advertiment i senyals P-24 lluminosos als enllaços.", "Millora dels tancaments i rampes d'escapament per evitar l'accés de la fauna a la calçada.", "Dissuasors acústics i òptics i cartells de presència de linx."] },
-      { name: "DGT", scope: "Direcció General de Trànsit — presentació de la balisa LIDAR de detecció i avís de fauna, connectada a la DGT 3.0.", points: ["Balises de control i dissuasòries: en apropar-se un vehicle, avisen el conductor i espanten la fauna amb llum i so. Només s'activen amb trànsit, així els animals creuen lliurement quan no n'hi ha.", "Tancament cinegètic + tecnologia: tanca convencional amb obertures de ~100 m en passos de fauna, on càmeres detecten l'animal i alerten el conductor.", "Tancament virtual: dispositius que detecten els fars a 200 m i emeten senyals per frenar l'animal, sense bloquejar el pas quan no hi ha trànsit."] },
+      { name: "DGT", scope: "Direcció General de Trànsit — presentació de la balisa LIDAR de detecció i avís de fauna, preparada per a la DGT 3.0.", points: ["Balises de control i dissuasòries: en apropar-se un vehicle, avisen el conductor i espanten la fauna amb llum i so. Només s'activen amb trànsit, així els animals creuen lliurement quan no n'hi ha.", "Tancament cinegètic + tecnologia: tanca convencional amb obertures de ~100 m en passos de fauna, on càmeres detecten l'animal i alerten el conductor.", "Tancament virtual: dispositius que detecten els fars a 200 m i emeten senyals per frenar l'animal, sense bloquejar el pas quan no hi ha trànsit."] },
     ],
   },
   contacto: {

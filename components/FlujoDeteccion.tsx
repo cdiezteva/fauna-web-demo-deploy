@@ -1,23 +1,26 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useI18n } from "@/lib/i18n";
 import Reveal from "./Reveal";
 
 /**
  * Sección compacta (sin numerar) entre "El problema" y "La gama":
- * flujo Detecta · Alerta · Protege con animación de información
- * desplazándose de izquierda a derecha.
+ * cadena Detecta · Alerta · Protege en tiempo real. Un pulso recorre el
+ * raíl encendiendo los nodos; al cruzar "Alerta", línea, pulso y nodo
+ * pasan a ámbar (estado de aviso). Arranca al entrar en el viewport y
+ * respeta prefers-reduced-motion.
  */
 
-// Detecta: anillo/diana (antes era el icono de Alerta)
+// Detecta: anillo/diana + barrido radar
 const IconDetecta = () => (
-  <svg width="44" height="44" viewBox="0 0 24 24" aria-hidden="true">
-    <circle cx="12" cy="12" r="7.5" fill="none" stroke="#4f83db" strokeWidth="3.4" />
-    <circle cx="12" cy="12" r="2.6" fill="#9dbdf0" />
+  <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="7.5" fill="none" stroke="#4f83db" strokeWidth="2.6" />
+    <circle cx="12" cy="12" r="2.4" fill="#9dbdf0" />
   </svg>
 );
 
-// Alerta: triángulo con signo de exclamación
+// Alerta: triángulo con exclamación LED (parpadea en ámbar)
 const IconAlerta = () => (
   <svg width="44" height="44" viewBox="0 0 24 24" aria-hidden="true">
     <path
@@ -27,14 +30,16 @@ const IconAlerta = () => (
       strokeWidth="2"
       strokeLinejoin="round"
     />
-    <line x1="12" y1="10" x2="12" y2="14.5" stroke="#9dbdf0" strokeWidth="2.2" strokeLinecap="round" />
-    <circle cx="12" cy="17.2" r="1.15" fill="#9dbdf0" />
+    <g className="fd-flash">
+      <line x1="12" y1="10" x2="12" y2="14.5" stroke="#f5b731" strokeWidth="2.2" strokeLinecap="round" />
+      <circle cx="12" cy="17.2" r="1.15" fill="#f5b731" />
+    </g>
   </svg>
 );
 
-// Protege: escudo
+// Protege: escudo con check que se dibuja
 const IconProtege = () => (
-  <svg width="42" height="44" viewBox="0 0 24 24" aria-hidden="true">
+  <svg width="40" height="42" viewBox="0 0 24 24" aria-hidden="true">
     <path
       d="M12 3 20 6 V11.5 C20 16.4 16.6 19.7 12 21 C7.4 19.7 4 16.4 4 11.5 V6 Z"
       fill="none"
@@ -42,22 +47,96 @@ const IconProtege = () => (
       strokeWidth="2"
       strokeLinejoin="round"
     />
-    <path d="M9 12 11.2 14.2 15 10" fill="none" stroke="#9dbdf0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      className="fd-check"
+      d="M9 12 11.2 14.2 15 10"
+      fill="none"
+      stroke="#9dbdf0"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
 const ICONS = [IconDetecta, IconAlerta, IconProtege];
-const ACTIVE = [false, true, false];
 
 export default function FlujoDeteccion() {
   const { t } = useI18n();
-  const steps = t.flujo.steps.map((s, i) => ({
-    n: i + 1,
-    title: s.title,
-    sub: s.sub,
-    Icon: ICONS[i],
-    active: ACTIVE[i],
-  }));
+  const panelRef = useRef<HTMLDivElement>(null);
+  const chargeRef = useRef<HTMLDivElement>(null);
+  const pulseRef = useRef<HTMLDivElement>(null);
+  const nodeRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    const charge = chargeRef.current;
+    const pulse = pulseRef.current;
+    const nodes = nodeRefs.current;
+    if (!panel || !charge || !pulse) return;
+
+    let raf = 0;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const play = () => {
+      const CYCLE = 7400, TRAVEL = 3600, HOLD = 2600; // viaje lento + encendido + reposo
+      const t0 = performance.now();
+      const tick = (now: number) => {
+        const e = (now - t0) % CYCLE;
+        if (e < TRAVEL) {
+          const p = e / TRAVEL;
+          charge.style.transform = `scaleX(${p})`;
+          pulse.style.opacity = "1";
+          pulse.style.left = `calc(${(p * 100).toFixed(2)}% - 6px)`;
+          nodes[0]?.classList.toggle("on", p >= 0);
+          nodes[1]?.classList.toggle("on", p >= 0.5);
+          nodes[2]?.classList.toggle("on", p >= 0.98);
+          panel.classList.toggle("fd-warn", p >= 0.5); // aviso: ámbar desde Alerta
+        } else if (e < TRAVEL + HOLD) {
+          pulse.style.opacity = "0";
+          charge.style.transform = "scaleX(1)";
+          nodes.forEach((n) => n?.classList.add("on"));
+          panel.classList.add("fd-warn");
+        } else {
+          charge.style.transform = "scaleX(0)";
+          pulse.style.opacity = "0";
+          nodes.forEach((n) => n?.classList.remove("on"));
+          panel.classList.remove("fd-warn");
+        }
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    };
+
+    const start = () => {
+      if (reduce) {
+        nodes.forEach((n) => n?.classList.add("on"));
+        charge.style.transform = "scaleX(1)";
+        return;
+      }
+      play();
+    };
+
+    if (typeof IntersectionObserver === "undefined") {
+      start();
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          start();
+          io.disconnect();
+        }
+      },
+      { threshold: 0.35 }
+    );
+    io.observe(panel);
+    return () => {
+      io.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <section className="bg-[#eef2f7] border-t border-b border-line">
       <div className="max-w-[1000px] mx-auto px-5 md:px-11 py-16 md:py-24 text-center">
@@ -65,7 +144,7 @@ export default function FlujoDeteccion() {
           <h2 className="font-display font-bold text-[26px] md:text-[44px] tracking-[-.02em] leading-[1.05] mb-4">
             {t.flujo.title}
           </h2>
-          <p className="text-base leading-relaxed text-[#5f7286] max-w-[560px] mx-auto mb-10 md:mb-16">
+          <p className="text-base leading-relaxed text-[#5f7286] max-w-[560px] mx-auto mb-10 md:mb-14">
             {t.flujo.sub1}
             <span className="text-brand font-medium">AVIZOR</span>
             {t.flujo.sub2}
@@ -73,37 +152,32 @@ export default function FlujoDeteccion() {
         </Reveal>
 
         <Reveal delay={120}>
-          <div className="relative flex items-start justify-between gap-4 max-w-[820px] mx-auto">
-            {/* Línea discontinua + puntos animados (detrás de los círculos) */}
-            <div className="pointer-events-none absolute left-[15%] right-[15%] top-10 md:top-14 z-0">
-              <div className="relative border-t-2 border-dashed border-[#c3d0dd]">
-                <span className="flow-dot absolute -top-[6px] block w-3 h-3 rounded-full bg-brand shadow-[0_0_12px_3px_rgba(59,102,194,.55)]" />
-                <span className="flow-dot-2 absolute -top-[6px] block w-3 h-3 rounded-full bg-brand shadow-[0_0_12px_3px_rgba(59,102,194,.55)]" />
+          <div ref={panelRef} className="fd-panel">
+            <div className="fd-chain">
+              <div className="fd-rail">
+                <div ref={chargeRef} className="fd-charge" />
+                <div ref={pulseRef} className="fd-pulse" />
               </div>
-            </div>
 
-            {steps.map((s) => (
-              <div key={s.n} className="relative z-10 flex flex-col items-center flex-1 min-w-0">
-                <div className="relative">
-                  {/* Halo del paso activo */}
-                  {s.active && (
-                    <span className="absolute -inset-[7px] rounded-full border-[6px] border-white shadow-[0_0_22px_rgba(59,102,194,.22)]" />
-                  )}
-                  <div className="relative w-20 h-20 md:w-28 md:h-28 rounded-full bg-[#0f2038] flex items-center justify-center shadow-[0_10px_30px_-10px_rgba(15,32,56,.5)]">
-                    <s.Icon />
-                    <span className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-brand text-white text-xs font-semibold flex items-center justify-center border-2 border-[#eef2f7]">
-                      {s.n}
-                    </span>
+              {t.flujo.steps.map((s, i) => {
+                const Icon = ICONS[i];
+                return (
+                  <div
+                    key={s.title}
+                    ref={(el) => {
+                      nodeRefs.current[i] = el;
+                    }}
+                    className={`fd-node${i === 1 ? " fd-node-alerta" : ""}`}
+                  >
+                    <div className="fd-lbl font-display">{s.title}</div>
+                    <div className="fd-bulb">
+                      {i === 0 && <div className="fd-sweep" />}
+                      <Icon />
+                    </div>
                   </div>
-                </div>
-                <div className="font-display font-bold text-base md:text-xl mt-5">
-                  {s.title}
-                </div>
-                <div className="font-mono text-xs text-[#8a9291] mt-2 tracking-[.02em]">
-                  {s.sub}
-                </div>
-              </div>
-            ))}
+                );
+              })}
+            </div>
           </div>
         </Reveal>
       </div>
