@@ -6,47 +6,40 @@ import Reveal from "./Reveal";
 
 /**
  * Sección compacta (sin numerar) entre "El problema" y "La gama":
- * cadena Detecta · Alerta · Protege en tiempo real, sobre un fondo de 3
- * vídeos en columnas. Un pulso recorre el raíl: llega a un nodo, se queda
- * parado ahí (encendiendo el nodo y ampliando el vídeo correspondiente al
- * 85% del fondo) y, pasado ese tiempo, continúa al siguiente. Al cruzar
- * "Alerta", línea, pulso y nodo pasan a ámbar (estado de aviso). Arranca al
- * entrar en el viewport y respeta prefers-reduced-motion.
+ * mosaico Detecta · Alerta · Protege sobre tres losas de vídeo iguales
+ * (diseño aprobado en test-flujo/flujo-e-caps.html).
+ *
+ * Un pulso cometa recorre el raíl punteado y se detiene en cada losa
+ * mientras su vídeo se reproduce (a color y sin velo; el resto en gris).
+ * La duración de cada fase se lee de los metadatos del vídeo (menos los
+ * recortes TRIM y un margen LEAD): se avanza justo antes del final y el
+ * vídeo queda congelado en su último fotograma. Al cruzar "Alerta" todo
+ * pasa a ámbar, y su círculo sigue animado (.lit) hasta terminar Protege.
+ * Arranca al entrar en el viewport y respeta prefers-reduced-motion.
  */
 
-// Vídeos de fondo, uno por nodo (Detecta · Alerta · Protege). De momento no
-// hay vídeo definitivo: se muestra un color de marca con la etiqueta del
-// nodo a modo de placeholder. Para añadir el vídeo real, basta con copiarlo
-// a /public/videos/ y poner su ruta aquí — el resto (tamaño, orden) ya está
-// preparado y no requiere más cambios.
-const FLUJO_VIDEOS: (string | null)[] = ["/videos/roe-deer-detecta.mp4", null, "/videos/roe-deer-protege.mp4"];
-const FLUJO_PLACEHOLDER_TINTS = ["#1a2740", "#3a2c14", "#123328"];
-
-// Duración de cada fase del ciclo (ms). El pulso viaja hasta un nodo, se
-// queda parado HOLD_MS (el vídeo de ese nodo ocupa el 85% del fondo) y
-// continúa hacia el siguiente; al llegar a Protege, el raíl se rebobina y
-// el ciclo vuelve a empezar por Detecta.
-const HOLD_MS = 10000;
-const TRAVEL_MS = 1600;
-const RESET_MS = 900;
-// Los vídeos se despliegan más rápido que lo que tarda el pulso en llegar
-// al nodo: alcanzan su tamaño final al principio del viaje y se quedan así.
-const VIDEO_MS = 450;
-
-// Peso (ancho) de cada columna de vídeo cuando el nodo i está activo.
-const ACTIVE_WEIGHTS = [
-  [0.85, 0.075, 0.075],
-  [0.075, 0.85, 0.075],
-  [0.075, 0.075, 0.85],
+// Vídeo de fondo de cada losa (Detecta · Alerta · Protege).
+const FLUJO_VIDEOS = [
+  "/videos/roe-deer-detecta.mp4",
+  "/videos/Sierra-Francia-Senal.mp4",
+  "/videos/roe-deer-protege.mp4",
 ];
 
-const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
-const lerpArr = (a: number[], b: number[], p: number) => a.map((v, i) => lerp(v, b[i], p));
-const clamp01 = (p: number) => Math.min(1, Math.max(0, p));
+// Recortes por vídeo (s): Detecta salta sus 5 primeros s, Alerta omite sus
+// 5 últimos s, Protege salta sus 5 primeros s.
+const TRIM = [
+  { start: 5, end: 0 },
+  { start: 0, end: 5 },
+  { start: 5, end: 0 },
+];
 
-// Detecta: anillo/diana + barrido radar
+const TRAVEL_MS = 950; // viaje del pulso entre nodos
+const IDLE_MS = 1200; // reposo al final del ciclo
+const LEAD_MS = 350; // se avanza este margen antes del final del vídeo
+
+// Detecta: anillo/diana + barrido radar (gira siempre)
 const IconDetecta = () => (
-  <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true">
+  <svg width="38" height="38" viewBox="0 0 24 24" aria-hidden="true">
     <circle cx="12" cy="12" r="7.5" fill="none" stroke="#4f83db" strokeWidth="2.6" />
     <circle cx="12" cy="12" r="2.4" fill="#9dbdf0" />
   </svg>
@@ -54,7 +47,7 @@ const IconDetecta = () => (
 
 // Alerta: triángulo con exclamación LED (parpadea en ámbar)
 const IconAlerta = () => (
-  <svg width="44" height="44" viewBox="0 0 24 24" aria-hidden="true">
+  <svg width="42" height="42" viewBox="0 0 24 24" aria-hidden="true">
     <path
       d="M12 4.5 21 19.5 3 19.5 Z"
       fill="none"
@@ -71,7 +64,7 @@ const IconAlerta = () => (
 
 // Protege: escudo con check que se dibuja
 const IconProtege = () => (
-  <svg width="40" height="42" viewBox="0 0 24 24" aria-hidden="true">
+  <svg width="38" height="40" viewBox="0 0 24 24" aria-hidden="true">
     <path
       d="M12 3 20 6 V11.5 C20 16.4 16.6 19.7 12 21 C7.4 19.7 4 16.4 4 11.5 V6 Z"
       fill="none"
@@ -95,226 +88,197 @@ const ICONS = [IconDetecta, IconAlerta, IconProtege];
 
 export default function FlujoDeteccion() {
   const { t } = useI18n();
-  const panelRef = useRef<HTMLDivElement>(null);
-  const chargeRef = useRef<HTMLDivElement>(null);
-  const pulseRef = useRef<HTMLDivElement>(null);
-  const nodeRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
   const colRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
 
   useEffect(() => {
-    const panel = panelRef.current;
-    const charge = chargeRef.current;
-    const pulse = pulseRef.current;
-    const nodes = nodeRefs.current;
+    const stage = stageRef.current;
+    const rail = railRef.current;
     const cols = colRefs.current;
-    if (!panel || !charge || !pulse) return;
+    const vids = videoRefs.current;
+    if (!stage || !rail) return;
 
     let raf = 0;
+    let cancelled = false;
+    let prevActive = -2;
+    let holds = [3600, 3600, 3600];
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const setCols = (w: number[]) => {
-      cols.forEach((c, i) => {
+    const setActive = (i: number) => {
+      stage.classList.toggle("fd-warn", i >= 1);
+      if (i === prevActive) return;
+      prevActive = i;
+      cols.forEach((c, j) => {
         if (!c) return;
-        c.style.flex = `${w[i]} 1 0%`;
-        // La etiqueta del placeholder solo se lee bien en la columna ancha
-        // (activa); en las estrechas se desvanece para no verse cortada.
-        const label = c.querySelector<HTMLElement>("[data-flujo-label]");
-        if (label) label.style.opacity = w[i] > 0.5 ? "1" : "0";
-        // El vídeo solo se reproduce mientras su columna está ampliada;
-        // en las estrechas se pausa para no gastar recursos de fondo.
-        const video = c.querySelector<HTMLVideoElement>("video");
-        if (video) {
-          if (w[i] > 0.5) {
-            if (video.paused) void video.play().catch(() => {});
-          } else if (!video.paused) {
-            video.pause();
+        const on = j === i;
+        const v = vids[j];
+        if (on) {
+          // reinicia vídeo (desde su recorte) y barra de progreso
+          const pr = c.querySelector<HTMLElement>(".fd-prog");
+          if (pr) {
+            pr.style.animation = "none";
+            void pr.offsetWidth;
+            pr.style.animation = "";
+            pr.style.animationDuration = `${holds[j]}ms`;
           }
+          if (v) {
+            try {
+              v.currentTime = TRIM[j].start;
+            } catch {}
+            v.play().catch(() => {});
+          }
+        } else {
+          v?.pause(); // congelado en su último fotograma
         }
+        c.classList.toggle("on", on);
       });
+      // Alerta permanece encendida mientras dura Protege
+      cols[1]?.classList.toggle("lit", i === 2);
     };
 
     const play = () => {
-      // Límites acumulados de cada fase dentro de un ciclo.
-      const b0 = HOLD_MS; // fin de la parada en Detecta
-      const b1 = b0 + TRAVEL_MS; // fin del viaje Detecta → Alerta
-      const b2 = b1 + HOLD_MS; // fin de la parada en Alerta
-      const b3 = b2 + TRAVEL_MS; // fin del viaje Alerta → Protege
-      const b4 = b3 + HOLD_MS; // fin de la parada en Protege
-      const CYCLE = b4 + RESET_MS; // + rebobinado antes de repetir
-
+      holds = vids.map((v, j) => {
+        if (!v || !isFinite(v.duration) || v.duration <= 0) return 3600;
+        const playable = v.duration - TRIM[j].start - TRIM[j].end;
+        return Math.max(800, playable * 1000 - LEAD_MS);
+      });
+      cols.forEach((c, j) => {
+        const pr = c?.querySelector<HTMLElement>(".fd-prog");
+        if (pr) pr.style.animationDuration = `${holds[j]}ms`;
+      });
+      const b = [
+        holds[0],
+        holds[0] + TRAVEL_MS,
+        holds[0] + TRAVEL_MS + holds[1],
+        holds[0] + TRAVEL_MS + holds[1] + TRAVEL_MS,
+        holds[0] + TRAVEL_MS + holds[1] + TRAVEL_MS + holds[2],
+      ];
+      const cycle = b[4] + IDLE_MS;
       const t0 = performance.now();
       const tick = (now: number) => {
-        const e = (now - t0) % CYCLE;
-        let pos: number;
-        let on0 = false, on1 = false, on2 = false, warn = false;
-        let pulseOpacity = 1;
-        let weights: number[];
-
-        if (e < b0) {
-          pos = 0;
-          on0 = true;
-          weights = ACTIVE_WEIGHTS[0];
-        } else if (e < b1) {
-          const p = (e - b0) / TRAVEL_MS;
-          pos = lerp(0, 0.5, p);
-          on0 = true;
-          weights = lerpArr(ACTIVE_WEIGHTS[0], ACTIVE_WEIGHTS[1], clamp01((e - b0) / VIDEO_MS));
-        } else if (e < b2) {
-          pos = 0.5;
-          on0 = true;
-          on1 = true;
-          warn = true;
-          weights = ACTIVE_WEIGHTS[1];
-        } else if (e < b3) {
-          const p = (e - b2) / TRAVEL_MS;
-          pos = lerp(0.5, 1, p);
-          on0 = true;
-          on1 = true;
-          warn = true;
-          weights = lerpArr(ACTIVE_WEIGHTS[1], ACTIVE_WEIGHTS[2], clamp01((e - b2) / VIDEO_MS));
-        } else if (e < b4) {
-          pos = 1;
-          on0 = true;
-          on1 = true;
-          on2 = true;
-          warn = true;
-          weights = ACTIVE_WEIGHTS[2];
-        } else {
-          // Rebobina el raíl y funde el pulso mientras los vídeos vuelven a Detecta.
-          const p = (e - b4) / RESET_MS;
-          pos = lerp(1, 0, p);
-          pulseOpacity = Math.max(0, 1 - p * 4);
-          weights = lerpArr(ACTIVE_WEIGHTS[2], ACTIVE_WEIGHTS[0], clamp01((e - b4) / VIDEO_MS));
-        }
-
-        charge.style.transform = `scaleX(${pos})`;
-        pulse.style.opacity = String(pulseOpacity);
-        pulse.style.left = `calc(${(pos * 100).toFixed(2)}% - 6px)`;
-        nodes[0]?.classList.toggle("on", on0);
-        nodes[1]?.classList.toggle("on", on1);
-        nodes[2]?.classList.toggle("on", on2);
-        panel.classList.toggle("fd-warn", warn);
-        setCols(weights);
-
+        if (cancelled) return;
+        const e = (now - t0) % cycle;
+        let p = 0;
+        let active = -1;
+        let go = true;
+        if (e < b[0]) { p = 0; active = 0; }
+        else if (e < b[1]) { p = 0.5 * (e - b[0]) / TRAVEL_MS; active = 0; }
+        else if (e < b[2]) { p = 0.5; active = 1; }
+        else if (e < b[3]) { p = 0.5 + 0.5 * (e - b[2]) / TRAVEL_MS; active = 1; }
+        else if (e < b[4]) { p = 1; active = 2; }
+        else { p = 0; active = -1; go = false; }
+        rail.style.setProperty("--p", p.toFixed(4));
+        rail.classList.toggle("go", go);
+        setActive(active);
         raf = requestAnimationFrame(tick);
       };
       raf = requestAnimationFrame(tick);
     };
 
+    // Espera a los metadatos (duración) de los tres vídeos antes de arrancar.
     const start = () => {
+      Promise.all(
+        vids.map(
+          (v) =>
+            new Promise<void>((res) => {
+              if (!v || (v.readyState >= 1 && isFinite(v.duration))) {
+                res();
+                return;
+              }
+              v.addEventListener("loadedmetadata", () => res(), { once: true });
+              setTimeout(res, 4000);
+            })
+        )
+      ).then(() => {
+        if (!cancelled) play();
+      });
+    };
+
+    const begin = () => {
       if (reduce) {
-        nodes.forEach((n) => n?.classList.add("on"));
-        charge.style.transform = "scaleX(1)";
-        panel.classList.add("fd-warn");
-        setCols(ACTIVE_WEIGHTS[2]);
+        rail.style.setProperty("--p", "1");
+        cols.forEach((c) => c?.classList.add("on"));
         return;
       }
-      play();
+      start();
     };
 
     if (typeof IntersectionObserver === "undefined") {
-      start();
+      begin();
       return;
     }
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          start();
+          begin();
           io.disconnect();
         }
       },
-      { threshold: 0.35 }
+      { threshold: 0.3 }
     );
-    io.observe(panel);
+    io.observe(stage);
     return () => {
+      cancelled = true;
       io.disconnect();
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-dark text-white">
-      {/* Fondo: 3 columnas de vídeo; la del nodo activo ocupa el 85%. */}
-      <div className="absolute inset-0 flex" aria-hidden="true">
-        {FLUJO_VIDEOS.map((src, i) => (
-          <div
-            key={i}
-            ref={(el) => {
-              colRefs.current[i] = el;
-            }}
-            className="relative h-full overflow-hidden"
-            style={{ flex: "1 1 0%" }}
-          >
-            {src ? (
-              <video
-                className="absolute inset-0 w-full h-full object-cover"
-                muted
-                loop
-                playsInline
-                preload="none"
-                controls={false}
-              >
-                <source src={src} type="video/mp4" />
-              </video>
-            ) : (
-              <div
-                className="hairline-diag absolute inset-0 flex items-end justify-center pb-6"
-                style={{ backgroundColor: FLUJO_PLACEHOLDER_TINTS[i] }}
-              >
-                <span
-                  data-flujo-label
-                  className="font-mono text-[10px] tracking-[.15em] uppercase text-white/50 whitespace-nowrap transition-opacity duration-300"
-                >
-                  {t.flujo.steps[i]?.title} · {t.gama.comingSoon}
-                </span>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/65" aria-hidden="true" />
-
-      <div className="relative z-10 max-w-[1000px] mx-auto px-5 md:px-11 py-16 md:py-24 text-center">
+    <section className="bg-[#eef2f7] border-t border-b border-line">
+      <div className="max-w-[1000px] mx-auto px-5 md:px-11 pt-16 md:pt-24 pb-10 md:pb-12 text-center">
         <Reveal className="text-center">
-          <h2 className="font-display font-bold text-[26px] md:text-[44px] tracking-[-.02em] leading-[1.05] mb-4 text-white [text-shadow:0_2px_16px_rgba(0,0,0,.55)]">
+          <h2 className="font-display font-bold text-[26px] md:text-[44px] tracking-[-.02em] leading-[1.05] mb-4">
             {t.flujo.title}
           </h2>
-          <p className="text-base leading-relaxed text-white/85 max-w-[560px] mx-auto mb-10 md:mb-14 [text-shadow:0_1px_10px_rgba(0,0,0,.5)]">
+          <p className="text-base leading-relaxed text-[#5f7286] max-w-[560px] mx-auto">
             {t.flujo.sub1}
-            <span className="text-accent font-medium">AVIZOR</span>
+            <span className="text-brand font-medium">AVIZOR</span>
             {t.flujo.sub2}
           </p>
         </Reveal>
+      </div>
 
-        <Reveal delay={120}>
-          <div ref={panelRef} className="fd-panel">
-            <div className="fd-chain">
-              <div className="fd-rail">
-                <div ref={chargeRef} className="fd-charge" />
-                <div ref={pulseRef} className="fd-pulse" />
-              </div>
-
-              {t.flujo.steps.map((s, i) => {
-                const Icon = ICONS[i];
-                return (
-                  <div
-                    key={s.title}
-                    ref={(el) => {
-                      nodeRefs.current[i] = el;
-                    }}
-                    className={`fd-node${i === 1 ? " fd-node-alerta" : ""}`}
-                  >
-                    <div className="fd-lbl font-display">{s.title}</div>
-                    <div className="fd-bulb">
-                      {i === 0 && <div className="fd-sweep" />}
-                      <Icon />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+      <div className="pb-16 md:pb-24">
+        <div ref={stageRef} className="fd-stage">
+          <div ref={railRef} className="fd-rail">
+            <div className="fd-charge" />
+            <div className="fd-pulse" />
           </div>
-        </Reveal>
+
+          {t.flujo.steps.map((s, i) => {
+            const Icon = ICONS[i];
+            return (
+              <div
+                key={s.title}
+                ref={(el) => {
+                  colRefs.current[i] = el;
+                }}
+                className={`fd-col${i === 1 ? " fd-alerta" : ""}`}
+              >
+                <video
+                  ref={(el) => {
+                    videoRefs.current[i] = el;
+                  }}
+                  muted
+                  playsInline
+                  preload="metadata"
+                  src={FLUJO_VIDEOS[i]}
+                />
+                <div className="fd-shade" />
+                <div className="fd-lbl font-display">{s.title}</div>
+                <div className="fd-bulb">
+                  {i === 0 && <div className="fd-sweep" />}
+                  <Icon />
+                </div>
+                <div className="fd-cap font-mono">{s.sub}</div>
+                <div className="fd-prog" />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
