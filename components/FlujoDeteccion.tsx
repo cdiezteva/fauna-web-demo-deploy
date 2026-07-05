@@ -19,7 +19,7 @@ import Reveal from "./Reveal";
 // nodo a modo de placeholder. Para añadir el vídeo real, basta con copiarlo
 // a /public/videos/ y poner su ruta aquí — el resto (tamaño, orden) ya está
 // preparado y no requiere más cambios.
-const FLUJO_VIDEOS: (string | null)[] = [null, null, null];
+const FLUJO_VIDEOS: (string | null)[] = ["/videos/roe-deer-detecta.mp4", null, "/videos/roe-deer-protege.mp4"];
 const FLUJO_PLACEHOLDER_TINTS = ["#1a2740", "#3a2c14", "#123328"];
 
 // Duración de cada fase del ciclo (ms). El pulso viaja hasta un nodo, se
@@ -120,6 +120,16 @@ export default function FlujoDeteccion() {
         // (activa); en las estrechas se desvanece para no verse cortada.
         const label = c.querySelector<HTMLElement>("[data-flujo-label]");
         if (label) label.style.opacity = w[i] > 0.5 ? "1" : "0";
+        // El vídeo solo se reproduce mientras su columna está ampliada;
+        // en las estrechas se pausa para no gastar recursos de fondo.
+        const video = c.querySelector<HTMLVideoElement>("video");
+        if (video) {
+          if (w[i] > 0.5) {
+            if (video.paused) void video.play().catch(() => {});
+          } else if (!video.paused) {
+            video.pause();
+          }
+        }
       });
     };
 
@@ -238,7 +248,6 @@ export default function FlujoDeteccion() {
             {src ? (
               <video
                 className="absolute inset-0 w-full h-full object-cover"
-                autoPlay
                 muted
                 loop
                 playsInline

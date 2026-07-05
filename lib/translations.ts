@@ -27,7 +27,11 @@ export interface Dict {
     mapLegend: { fo: string; e: string; l: string; b: string };
     items: { solName: string; ambito: string; tagline: string; desc: string; specs: string[]; refs: string[] }[];
   };
-  plataforma: { label: string; title: string; subtitle: string; deployLabel: string };
+  plataforma: {
+    label: string; title: string; subtitle: string; deployLabel: string;
+    flowPlacaLabel: string; flowPlacaCaption: string; flowArrowLabel: string;
+    flowPlataformaLabel: string; flowPlataformaCaption: string;
+  };
   referencias: { label: string; title: string; items: { name: string; scope: string; points?: string[] }[] };
   descargas: { label: string; title: string; subtitle: string; contactPrompt: string; contactLink: string; dossierTitle: string; dossierDesc: string; download: string; videoTag: string; videos: string[] };
   contacto: {
@@ -158,6 +162,11 @@ const es: Dict = {
     title: "Cada cruce se convierte en un dato. Cada dato, en una decisión.",
     subtitle: "El valor diferencial de AVIZOR Fauna no termina en la carretera. La tarjeta de control, tecnología propia de TEVA, es la que recopila cada detección sobre el terreno; AVIZOR Cloud, la plataforma, es la que agrega, depura y analiza esos datos a lo largo del tiempo, y devuelve a la administración una lectura clara del riesgo. La señalización protege hoy; el dato permite planificar mañana.",
     deployLabel: "Plataforma operativa · A-4 y A-44 (Jaén y Granada)",
+    flowPlacaLabel: "1 · La placa",
+    flowPlacaCaption: "Recoge cada detección en el terreno, en tiempo real.",
+    flowArrowLabel: "Envía los datos",
+    flowPlataformaLabel: "2 · La plataforma",
+    flowPlataformaCaption: "Los agrega, depura y convierte en decisiones.",
   },
   referencias: {
     label: "Referencias · Casos de éxito",
@@ -318,6 +327,11 @@ const en: Dict = {
     title: "Every crossing becomes data. Every datum, a decision.",
     subtitle: "AVIZOR Fauna's differential value does not end on the road. TEVA's own control board is what collects every detection on the ground; AVIZOR Cloud, the platform, is what aggregates, cleans and analyses that data over time, giving the authorities a clear reading of the risk. Signage protects today; data lets you plan for tomorrow.",
     deployLabel: "Platform in operation · A-4 and A-44 (Jaén and Granada)",
+    flowPlacaLabel: "1 · The board",
+    flowPlacaCaption: "Collects every detection on the ground, in real time.",
+    flowArrowLabel: "Sends the data",
+    flowPlataformaLabel: "2 · The platform",
+    flowPlataformaCaption: "Aggregates, cleans and turns it into decisions.",
   },
   referencias: {
     label: "References · Success stories",
@@ -478,6 +492,11 @@ const pt: Dict = {
     title: "Cada travessia torna-se um dado. Cada dado, numa decisão.",
     subtitle: "O valor diferencial da AVIZOR Fauna não termina na estrada. A placa de controlo, tecnologia própria da TEVA, é quem recolhe cada deteção no terreno; o AVIZOR Cloud, a plataforma, é quem agrega, depura e analisa esses dados ao longo do tempo, devolvendo à administração uma leitura clara do risco. A sinalização protege hoje; os dados permitem planear amanhã.",
     deployLabel: "Plataforma operacional · A-4 e A-44 (Jaén e Granada)",
+    flowPlacaLabel: "1 · A placa",
+    flowPlacaCaption: "Recolhe cada deteção no terreno, em tempo real.",
+    flowArrowLabel: "Envia os dados",
+    flowPlataformaLabel: "2 · A plataforma",
+    flowPlataformaCaption: "Agrega, depura e transforma em decisões.",
   },
   referencias: {
     label: "Referências · Casos de sucesso",
@@ -638,6 +657,11 @@ const ca: Dict = {
     title: "Cada encreuament es converteix en una dada. Cada dada, en una decisió.",
     subtitle: "El valor diferencial d'AVIZOR Fauna no acaba a la carretera. La targeta de control, tecnologia pròpia de TEVA, és la que recull cada detecció sobre el terreny; AVIZOR Cloud, la plataforma, és la que agrega, depura i analitza aquestes dades al llarg del temps, i retorna a l'administració una lectura clara del risc. La senyalització protegeix avui; la dada permet planificar demà.",
     deployLabel: "Plataforma operativa · A-4 i A-44 (Jaén i Granada)",
+    flowPlacaLabel: "1 · La targeta",
+    flowPlacaCaption: "Recull cada detecció sobre el terreny, en temps real.",
+    flowArrowLabel: "Envia les dades",
+    flowPlataformaLabel: "2 · La plataforma",
+    flowPlataformaCaption: "Les agrega, depura i converteix en decisions.",
   },
   referencias: {
     label: "Referències · Casos d'èxit",

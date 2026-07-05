@@ -3,7 +3,6 @@
 import SectionLabel from "./SectionLabel";
 import Reveal from "./Reveal";
 import LazyVideo from "./LazyVideo";
-import { platformDeployment } from "@/lib/content";
 import { useI18n } from "@/lib/i18n";
 
 export default function Plataforma() {
@@ -19,49 +18,73 @@ export default function Plataforma() {
           {t.plataforma.subtitle}
         </p>
 
-        {/* Área grande: demo de AVIZOR Cloud dentro de un marco tipo navegador */}
+        {/* Flujo: la placa recoge el dato en campo, la plataforma lo explota.
+            Una única tarjeta partida en dos por una línea divisoria, con una
+            flecha circular justo en el centro que marca el sentido del dato.
+            En móvil la división y la flecha pasan a vertical. */}
         <Reveal>
-          <div className="rounded-xl border border-[#dde2e1] overflow-hidden shadow-sm bg-white flex flex-col min-h-[380px] md:min-h-[620px]">
-            {/* Barra del navegador */}
-            <div className="flex items-center gap-3 px-4 py-2.5 bg-[#f1f3f5] border-b border-[#e2e5e6] flex-none">
-              <div className="flex gap-1.5 flex-none">
-                <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-                <span className="w-3 h-3 rounded-full bg-[#febc2e]" />
-                <span className="w-3 h-3 rounded-full bg-[#28c840]" />
-              </div>
-              <div className="flex-1 flex items-center gap-2 bg-white border border-[#e2e5e6] rounded-md px-3 py-1.5 min-w-0">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a9291" strokeWidth="2" className="flex-none" aria-hidden="true">
-                  <rect x="4" y="11" width="16" height="9" rx="2" />
-                  <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-                </svg>
-                <span className="font-mono text-[11px] md:text-xs text-[#6b7378] truncate">
-                  {platformDeployment.url}
+          <div className="relative rounded-xl border border-[#dde2e1] overflow-hidden shadow-sm bg-[#0d1211] md:h-[440px]">
+            <div className="flex flex-col md:flex-row md:h-full">
+              {/* 1 · La placa */}
+              <div className="relative flex-1 aspect-video md:aspect-auto border-b md:border-b-0 md:border-r border-white/15">
+                <LazyVideo
+                  src="/videos/video-placa-showcase.mp4"
+                  className="absolute inset-0"
+                  videoClassName="w-full h-full object-cover"
+                />
+                <span className="absolute top-4 left-4 font-mono text-[11px] tracking-[.1em] uppercase text-white/90 bg-black/45 backdrop-blur-sm px-2.5 py-1 rounded-full">
+                  {t.plataforma.flowPlacaLabel}
                 </span>
               </div>
-            </div>
-            {/* Viewport con el vídeo (silenciado, en bucle, sin controles) */}
-            <div className="relative flex-1 bg-[#0d1211] min-h-[280px]">
-              <LazyVideo
-                src="/videos/demoavizorcloud.mp4"
-                poster="/images/poster-demo.jpg"
-                className="absolute inset-0"
-                videoClassName="w-full h-full object-cover"
-              />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-5 py-3 pointer-events-none">
-                <div className="font-mono text-xs text-accent tracking-[.05em]">
-                  {t.plataforma.deployLabel}
+
+              {/* 2 · La plataforma */}
+              <div className="relative flex-1 aspect-video md:aspect-auto">
+                <LazyVideo
+                  src="/videos/demoavizorcloud.mp4"
+                  poster="/images/poster-demo.jpg"
+                  className="absolute inset-0"
+                  videoClassName="w-full h-full object-cover"
+                />
+                <span className="absolute top-4 left-4 font-mono text-[11px] tracking-[.1em] uppercase text-white/90 bg-black/45 backdrop-blur-sm px-2.5 py-1 rounded-full">
+                  {t.plataforma.flowPlataformaLabel}
+                </span>
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-4 py-2.5 pointer-events-none">
+                  <div className="font-mono text-[11px] text-accent tracking-[.05em]">
+                    {t.plataforma.deployLabel}
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Flecha: exactamente en el centro de la tarjeta, sobre la línea divisoria */}
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-white border-2 border-ink shadow-md"
+              title={t.plataforma.flowArrowLabel}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="text-ink rotate-90 md:rotate-0" aria-hidden="true">
+                <path d="M5 12h14" />
+                <path d="M13 6l6 6-6 6" />
+              </svg>
+              <span className="sr-only">{t.plataforma.flowArrowLabel}</span>
+            </div>
+          </div>
+
+          {/* Texto explicativo bajo cada mitad */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-14 mt-4">
+            <p className="text-[13px] leading-snug text-[#4a5257] m-0">
+              {t.plataforma.flowPlacaCaption}
+            </p>
+            <p className="text-[13px] leading-snug text-[#4a5257] m-0">
+              {t.plataforma.flowPlataformaCaption}
+            </p>
           </div>
         </Reveal>
 
-        {/* Áreas pequeñas: tres vídeos en fila bajo el vídeo principal */}
+        {/* Áreas pequeñas: vídeos de contexto adicionales */}
         <Reveal delay={100}>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mt-4 md:mt-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 mt-4 md:mt-5">
             {[
               { src: "/videos/ovejacruza.mp4", poster: "/images/poster-oveja.jpg" },
-              { src: "/videos/video-placa-showcase.mp4" },
               { src: "/videos/infrarroja.mp4", poster: "/images/poster-infrarroja.jpg" },
             ].map((v) => (
               <LazyVideo
