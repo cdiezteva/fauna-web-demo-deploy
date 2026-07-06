@@ -249,11 +249,12 @@ applyMapI18n();
 <script>
 // ── VISTAS ────────────────────────────────────────────────────────────────────
 // La vista general encuadra TODOS los datos dibujados en Collserola.
-// Jaén y Sierra de Francia son áreas de demostración (sin datos por ahora).
-var DATA_BOUNDS = [[2.056,41.403],[2.128,41.451]];   // bbox de todas las capas
+// Jaén ya tiene datos (Fauna-E); Sierra de Francia sigue siendo demo (sin datos por ahora).
+var DATA_BOUNDS = [[2.056,41.403],[2.128,41.451]];   // bbox de todas las capas en Collserola
+var JAEN_BOUNDS = [[-3.980,37.300],[-3.563,38.127]]; // bbox de los puntos Fauna-E en Jaén
 var VIEWS = [
   { key:'v_general',  kind:'bounds', bounds:DATA_BOUNDS, pitch:50, bearing:-10, zoomBoost:0.45 },
-  { key:'v_jaen',     kind:'fly', center:[-3.507,38.395], zoom:13.1, pitch:50, bearing:0 },   // Despeñaperros (Jaén)
+  { key:'v_jaen',     kind:'bounds', bounds:JAEN_BOUNDS, pitch:50, bearing:0 },
   { key:'v_sfrancia', kind:'fly', center:[-6.110,40.492], zoom:12.9, pitch:50, bearing:0 }    // La Alberca / Peña de Francia
 ];
 
@@ -305,6 +306,16 @@ function assignGroups(layer){
   }
 }
 DATA_LAYERS.forEach(assignGroups);
+
+// Los puntos nuevos de Jaén (Fauna-E) aún no tienen contenido propio: en vez de
+// reciclar las fotos/vídeos de Collserola, muestran una frase explicando qué es Fauna-E.
+(function(){
+  var l = DATA_LAYERS.find(function(x){ return x.id==='fauna-e'; });
+  if(!l) return;
+  var generic = { type:'image', src:'assets/carretera-FO.jpg', title:'Fauna-E',
+    desc:'Enlaces de comunicación que transmiten en tiempo real las detecciones de fauna registradas.' };
+  while (MEDIA['fauna-e'].length < l.nGroups) MEDIA['fauna-e'].push(generic);
+})();
 
 // ── LEYENDA ───────────────────────────────────────────────────────────────────
 (function(){
