@@ -151,7 +151,7 @@ export const gama: GamaItem[] = [
     solName: "Analítica de vídeo",
     ambito: "Enlaces, accesos y puntos discretos",
     tint: "#1C2836",
-    bg: "", // placeholder: pendiente de sustituir por imagen definitiva
+    bg: "/images/gama-e.jpg",
     tagline: "Cámara con visión nocturna",
     desc: "Una cámara inteligente distingue automáticamente entre animales, vehículos y personas, incluso de noche. Pensada para enlaces de autovía o autopista, accesos y puntos muy concretos.",
     specs: [
@@ -176,7 +176,7 @@ export const gama: GamaItem[] = [
     solName: "Barrera láser multihaz",
     ambito: "Perímetros y pasos recurrentes de fauna",
     tint: "#202C42",
-    bg: "", // placeholder: pendiente de sustituir por imagen definitiva
+    bg: "/images/gama-l.jpg",
     tagline: "Barrera invisible de luz infrarroja",
     desc: "Detectores instalados a ambos lados de la vía forman una barrera invisible que se activa cuando un animal la cruza. Ideal para vallar virtualmente tramos abiertos y puntos con muchos atropellos, con muy pocas falsas alarmas.",
     specs: [
@@ -308,7 +308,7 @@ export const references = [
     scope: "Detección por barreras láser con avisos automáticos para la seguridad vial.",
     sol: "Fauna-L",
     target: "sol-l",
-    image: "/images/baliza-laser.jpg",
+    image: "/images/gama-l.jpg",
   },
   {
     id: "ref-a4a44",

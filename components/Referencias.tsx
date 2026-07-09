@@ -158,7 +158,7 @@ export default function Referencias() {
             {/* Seleccionada — 75% de ancho y altura completa */}
             <div className="md:flex-[3_1_0%] min-w-0">
               <div
-                className="flex flex-col md:flex-row-reverse bg-white border border-line rounded-2xl overflow-hidden shadow-sm md:h-[620px] transition-shadow duration-300"
+                className="flex flex-col md:flex-row-reverse bg-white border border-line rounded-2xl overflow-hidden shadow-sm md:min-h-[620px] transition-shadow duration-300"
               >
                 {selected.image && (
                   <div className="relative md:w-[30%] flex-none h-[220px] md:h-auto">
@@ -195,7 +195,7 @@ export default function Referencias() {
                   <button
                     type="button"
                     onClick={() => goToGama(selected.target)}
-                    className="mt-auto self-start inline-flex items-center gap-2 font-mono text-sm font-semibold text-brand hover:text-brand-dark no-underline cursor-pointer bg-transparent border-none p-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
+                    className="mt-4 self-start inline-flex items-center gap-2 font-mono text-sm font-semibold text-brand hover:text-brand-dark no-underline cursor-pointer bg-transparent border-none p-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
                   >
                     {selected.sol} →
                   </button>
@@ -204,7 +204,7 @@ export default function Referencias() {
             </div>
 
             {/* Resto — columna 1×4 (25%), misma altura que la seleccionada */}
-            <div className="md:flex-[1_1_0%] min-w-0 flex flex-col gap-4 md:h-[620px]">
+            <div className="md:flex-[1_1_0%] min-w-0 flex flex-col gap-4 md:min-h-[620px]">
               {others.map(({ r, i }) => (
                 <div
                   key={r.id}

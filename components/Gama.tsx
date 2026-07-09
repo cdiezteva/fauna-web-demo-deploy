@@ -73,7 +73,7 @@ export default function Gama() {
   // Enlace inverso: abre la tarjeta correspondiente en «Referencias».
   const goToReferencia = (refId: string) => {
     window.dispatchEvent(new CustomEvent("referencias:select", { detail: refId }));
-    document.getElementById("referencias-cards")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("referencias")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (

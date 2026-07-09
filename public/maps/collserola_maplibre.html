@@ -214,22 +214,22 @@ button.on { background:#EAF0FA; color:#2C4EA0; }
 var MAP_LANG = (new URLSearchParams(location.search).get('lang') || 'es');
 var I18N = {
   es: { style:'Estilo', topo:'Topográfico', roads:'Carreteras', view:'Vista',
-        v_general:'Sierra de Collserola', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
+        v_general:'Vista general', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
         legend:'Leyenda', terrain:'Relieve', t_exag:'Exagerado x1.5', t_real:'Real x1.0', t_flat:'Plano',
         visibility:'Visibilidad', poi:'Iconos / POI', labels:'Etiquetas',
         loading:'Cargando…', done:'Listo', l_lib:'Cargando MapLibre…', l_tiles:'Cargando teselas…', l_cfg:'Configurando…' },
   en: { style:'Style', topo:'Topographic', roads:'Roads', view:'View',
-        v_general:'Sierra de Collserola', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
+        v_general:'Overview', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
         legend:'Legend', terrain:'Terrain', t_exag:'Exaggerated x1.5', t_real:'Real x1.0', t_flat:'Flat',
         visibility:'Visibility', poi:'Icons / POI', labels:'Labels',
         loading:'Loading…', done:'Ready', l_lib:'Loading MapLibre…', l_tiles:'Loading tiles…', l_cfg:'Configuring…' },
   pt: { style:'Estilo', topo:'Topográfico', roads:'Estradas', view:'Vista',
-        v_general:'Sierra de Collserola', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
+        v_general:'Vista geral', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
         legend:'Legenda', terrain:'Relevo', t_exag:'Exagerado x1.5', t_real:'Real x1.0', t_flat:'Plano',
         visibility:'Visibilidade', poi:'Ícones / POI', labels:'Etiquetas',
         loading:'A carregar…', done:'Pronto', l_lib:'A carregar MapLibre…', l_tiles:'A carregar telas…', l_cfg:'A configurar…' },
   ca: { style:'Estil', topo:'Topogràfic', roads:'Carreteres', view:'Vista',
-        v_general:'Serra de Collserola', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
+        v_general:'Vista general', v_jaen:'Jaén', v_sfrancia:'Sierra de Francia',
         legend:'Llegenda', terrain:'Relleu', t_exag:'Exagerat x1.5', t_real:'Real x1.0', t_flat:'Pla',
         visibility:'Visibilitat', poi:'Icones / POI', labels:'Etiquetes',
         loading:'Carregant…', done:'Llest', l_lib:'Carregant MapLibre…', l_tiles:'Carregant tessel·les…', l_cfg:'Configurant…' }
@@ -248,12 +248,11 @@ applyMapI18n();
 
 <script>
 // ── VISTAS ────────────────────────────────────────────────────────────────────
-// La vista general encuadra TODOS los datos dibujados en Collserola.
+// La vista general encuadra TODOS los datos dibujados en la zona de ejemplo.
 // Jaén ya tiene datos (Fauna-E); Sierra de Francia sigue siendo demo (sin datos por ahora).
-var DATA_BOUNDS = [[2.056,41.403],[2.128,41.451]];   // bbox de todas las capas en Collserola
+var DATA_BOUNDS = [[2.056,41.403],[2.128,41.451]];   // bbox de todas las capas de la zona de ejemplo
 var JAEN_BOUNDS = [[-3.980,37.300],[-3.563,38.127]]; // bbox de los puntos Fauna-E en Jaén
 var VIEWS = [
-  { key:'v_general',  kind:'bounds', bounds:DATA_BOUNDS, pitch:50, bearing:-10, zoomBoost:0.45 },
   { key:'v_jaen',     kind:'bounds', bounds:JAEN_BOUNDS, pitch:50, bearing:0 },
   { key:'v_sfrancia', kind:'fly', center:[-6.110,40.492], zoom:12.9, pitch:50, bearing:0 }    // La Alberca / Peña de Francia
 ];
@@ -308,7 +307,7 @@ function assignGroups(layer){
 DATA_LAYERS.forEach(assignGroups);
 
 // Los puntos nuevos de Jaén (Fauna-E) aún no tienen contenido propio: en vez de
-// reciclar las fotos/vídeos de Collserola, muestran una frase explicando qué es Fauna-E.
+// reciclar las fotos/vídeos de la zona de ejemplo, muestran una frase explicando qué es Fauna-E.
 (function(){
   var l = DATA_LAYERS.find(function(x){ return x.id==='fauna-e'; });
   if(!l) return;
@@ -355,7 +354,7 @@ try {
     container:'map',
     attributionControl:false,
     style: STYLES.topo,
-    center:[2.0925,41.4265], zoom:12.4, pitch:isMobile?42:50, bearing:-10,
+    center:[-3.77,37.71], zoom:8.5, pitch:isMobile?42:50, bearing:0,
     maxPitch:isMobile?70:85, antialias:!isMobile,
     minZoom: 4.5,
     maxZoom: 17
@@ -376,7 +375,17 @@ if (map) {
     setP(70, L.l_cfg);
     try { initLayers(); initPopups(); } catch(e){ console.warn('init:',e); }
     revealUI();
-    flyToView(VIEWS[0], true);
+    flyToView({ key:'v_jaen', kind:'bounds', bounds:JAEN_BOUNDS, pitch:50, bearing:0, zoomBoost:0.7 }, true);
+    // Primer render completo (etiquetas base y puntos) sin necesidad de interactuar:
+    // en algunos navegadores el mapa dentro de un iframe no termina de pintar hasta
+    // el primer gesto. Forzamos un resize y un micro-desplazamiento imperceptible.
+    requestAnimationFrame(function(){ if (map) map.resize(); });
+    setTimeout(function(){
+      if (!map) return;
+      map.resize();
+      map.panBy([0, 1], { duration: 0 });
+      map.panBy([0, -1], { duration: 0 });
+    }, 500);
   });
 
   map.on('idle', revealUI);
@@ -426,7 +435,7 @@ function dataLayerSpec(l, visibility){
     return {
       id:l.id, type:'circle', source:l.id+'-src',
       paint:{
-        'circle-radius':['interpolate',['linear'],['zoom'],11,3,15,6,17,9],
+        'circle-radius':['interpolate',['linear'],['zoom'],8,4,11,4,15,6,17,9],
         'circle-color':l.color,
         'circle-opacity':0.95,
         'circle-stroke-width':1.5,
