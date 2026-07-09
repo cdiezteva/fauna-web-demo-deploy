@@ -252,9 +252,10 @@ applyMapI18n();
 // Jaén ya tiene datos (Fauna-E); Sierra de Francia sigue siendo demo (sin datos por ahora).
 var DATA_BOUNDS = [[2.056,41.403],[2.128,41.451]];   // bbox de todas las capas de la zona de ejemplo
 var JAEN_BOUNDS = [[-3.980,37.300],[-3.563,38.127]]; // bbox de los puntos Fauna-E en Jaén
+var SFRANCIA_BOUNDS = [[-6.1390,40.5175],[-6.1295,40.5620]]; // bbox de los puntos SEÑAL (Fauna-E) de la Sierra de Francia (SA-201)
 var VIEWS = [
   { key:'v_jaen',     kind:'bounds', bounds:JAEN_BOUNDS, pitch:50, bearing:0 },
-  { key:'v_sfrancia', kind:'fly', center:[-6.110,40.492], zoom:12.9, pitch:50, bearing:0 }    // La Alberca / Peña de Francia
+  { key:'v_sfrancia', kind:'bounds', bounds:SFRANCIA_BOUNDS, pitch:50, bearing:0 }    // Somacyl · SA-201 (El Cabaco–El Casarito)
 ];
 
 var STYLES = {
