@@ -14,9 +14,13 @@ export default function Plataforma() {
         <h2 className="font-display font-bold text-[26px] md:text-[50px] leading-[1.06] tracking-[-.02em] mb-5 max-w-[780px] balance">
           {t.plataforma.title}
         </h2>
-        <p className="text-base md:text-[17px] leading-relaxed text-[#4a5257] max-w-[620px] mb-12">
-          {t.plataforma.subtitle}
-        </p>
+        <div className="max-w-[720px] mb-12 space-y-5">
+          {t.plataforma.subtitle.map((para, i) => (
+            <p key={i} className="text-base md:text-[17px] leading-relaxed text-[#4a5257] m-0">
+              {para}
+            </p>
+          ))}
+        </div>
 
         {/* Flujo: la placa recoge el dato en campo, la plataforma lo explota.
             Una única tarjeta partida en dos por una línea divisoria, con una
