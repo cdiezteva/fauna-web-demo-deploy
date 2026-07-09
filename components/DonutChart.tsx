@@ -4,15 +4,6 @@ import { useEffect, useRef, useState } from "react";
 
 type Segment = { pct: number; color: string };
 
-/** Oscurece un color hex multiplicando sus canales (f < 1 = más oscuro). */
-function shade(hex: string, f: number): string {
-  const n = parseInt(hex.slice(1), 16);
-  const r = Math.min(255, Math.round(((n >> 16) & 255) * f));
-  const g = Math.min(255, Math.round(((n >> 8) & 255) * f));
-  const b = Math.min(255, Math.round((n & 255) * f));
-  return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
-}
-
 /**
  * Animated donut: the colored segments are drawn statically and revealed in a
  * single pass by an arc-shaped mask that sweeps the whole ring once.
@@ -112,10 +103,13 @@ export default function DonutChart({
             const isActive = s.i === activeIndex;
             const hovering = activeIndex != null;
             const isDimmed = hovering && !isActive;
-            // Al pasar el ratón oscurecemos los tonos para que los azules más
-            // claros se distingan con nitidez; el resaltado se apoya en el grosor
-            // y en una atenuación suave (no en un desvanecido que los borraría).
-            const stroke = hovering ? shade(s.color, 0.68) : s.color;
+            // Al pasar el ratón, la especie seleccionada se resalta en azul y el
+            // resto atenúa a gris claro, para distinguirla con nitidez.
+            const stroke = !hovering
+              ? s.color
+              : isActive
+              ? "#1F4A9E"
+              : "#d9dee2";
             return (
               <circle
                 key={s.i}
