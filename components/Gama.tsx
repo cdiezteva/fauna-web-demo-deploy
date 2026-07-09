@@ -146,7 +146,7 @@ export default function Gama() {
                 </div>
 
                 {isActive && (
-                  <div className="relative z-10 animate-fadeUp">
+                  <div className="absolute z-10 animate-fadeUp left-5 right-5 bottom-7">
                     <div className="text-lg md:text-xl font-semibold leading-snug text-white [text-shadow:0_1px_12px_rgba(0,0,0,.9)]">
                       {g.ambito}
                     </div>
@@ -174,43 +174,61 @@ export default function Gama() {
           className="scroll-mt-[88px] bg-white border border-t-0 border-[#dde2e1] rounded-b-2xl overflow-hidden"
         >
           <div className="flex flex-col md:flex-row md:items-stretch">
-            <div className="md:flex-[5_1_0%] min-w-0 p-6 md:py-11 md:pl-11 md:pr-8">
-              <div className="flex items-center gap-3.5 mb-4 flex-wrap">
-                <span className="font-mono text-[13px] font-semibold text-brand bg-brand-light px-3 py-1.5 rounded-md">
-                  {activeItem.code}
-                </span>
-                <h3 className="font-display font-bold text-2xl md:text-3xl tracking-[-.01em] m-0">
-                  {activeItem.solName}
-                </h3>
-              </div>
-              <div className="font-mono text-xs text-[#8a9291] tracking-[.02em] mb-4">
-                {t.gama.ambitoWord} · {activeItem.ambito}
-              </div>
-              <p className="text-base leading-relaxed text-[#3d454a] max-w-[600px] mb-5">
-                {activeItem.desc}
-              </p>
-              <ul className="space-y-2">
-                {activeItem.specs.map((s) => (
-                  <li key={s} className="text-sm text-[#16191b] flex gap-2">
-                    <span className="text-brand">·</span>
-                    <span>{s}</span>
-                  </li>
-                ))}
-              </ul>
-              {activeItem.refTags && activeItem.refTags.length > 0 && (
-                <div className="mt-5 flex flex-wrap items-center gap-2">
-                  {activeItem.refTags.map((rt) => (
-                    <button
-                      key={rt.ref}
-                      type="button"
-                      onClick={() => goToReferencia(rt.ref)}
-                      className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-[.04em] text-brand bg-brand-light hover:bg-brand hover:text-white px-3 py-1.5 rounded-full cursor-pointer border-none transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
-                    >
-                      {rt.label} →
-                    </button>
-                  ))}
-                </div>
-              )}
+            <div className="md:flex-[5_1_0%] min-w-0 p-6 md:py-11 md:pl-11 md:pr-8 grid">
+              {/* Todas las fichas se apilan en la misma celda de rejilla: la
+                  altura del panel es siempre la de la ficha más alta, de modo
+                  que el carrusel automático no reajusta la altura ni desplaza
+                  la página al cambiar de solución. */}
+              {items.map((it) => {
+                const isOn = it.id === active;
+                return (
+                  <div
+                    key={it.id}
+                    aria-hidden={!isOn}
+                    className={`col-start-1 row-start-1 ${
+                      isOn ? "" : "invisible pointer-events-none"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3.5 mb-4 flex-wrap">
+                      <span className="font-mono text-[13px] font-semibold text-brand bg-brand-light px-3 py-1.5 rounded-md">
+                        {it.code}
+                      </span>
+                      <h3 className="font-display font-bold text-2xl md:text-3xl tracking-[-.01em] m-0">
+                        {it.solName}
+                      </h3>
+                    </div>
+                    <div className="font-mono text-xs text-[#8a9291] tracking-[.02em] mb-4">
+                      {t.gama.ambitoWord} · {it.ambito}
+                    </div>
+                    <p className="text-base leading-relaxed text-[#3d454a] max-w-[600px] mb-5">
+                      {it.desc}
+                    </p>
+                    <ul className="space-y-2">
+                      {it.specs.map((s) => (
+                        <li key={s} className="text-sm text-[#16191b] flex gap-2">
+                          <span className="text-brand">·</span>
+                          <span>{s}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    {it.refTags && it.refTags.length > 0 && (
+                      <div className="mt-5 flex flex-wrap items-center gap-2">
+                        {it.refTags.map((rt) => (
+                          <button
+                            key={rt.ref}
+                            type="button"
+                            onClick={() => goToReferencia(rt.ref)}
+                            tabIndex={isOn ? 0 : -1}
+                            className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-[.04em] text-brand bg-brand-light hover:bg-brand hover:text-white px-3 py-1.5 rounded-full cursor-pointer border-none transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
+                          >
+                            {rt.label} →
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             <div className="md:flex-[4_1_0%] min-w-0 flex">
